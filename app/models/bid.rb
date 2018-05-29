@@ -2,19 +2,25 @@
 #
 # Table name: bids
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer
-#  lot_id     :integer
+#  id         :bigint(8)        not null, primary key
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  lot_id     :bigint(8)
+#  user_id    :bigint(8)
 #
 # Indexes
 #
 #  index_bids_on_lot_id   (lot_id)
 #  index_bids_on_user_id  (user_id)
 #
+# Foreign Keys
+#
+#  fk_rails_c8d521b062  (lot_id => lots.id)
+#  fk_rails_e173de2ed3  (user_id => users.id)
+#
 
 class Bid < ApplicationRecord
-  has_many :users
+  belongs_to :user
   has_one :order
+  belongs_to :lot
 end
