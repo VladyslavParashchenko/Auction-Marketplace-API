@@ -18,4 +18,5 @@
 
 class Order < ApplicationRecord
   belongs_to :bid
+  has_one :lot, through: :bid
 end

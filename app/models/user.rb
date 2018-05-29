@@ -9,4 +9,5 @@
 
 class User < ApplicationRecord
   has_many :bids
+  has_many :lots, dependent: :destroy
 end
