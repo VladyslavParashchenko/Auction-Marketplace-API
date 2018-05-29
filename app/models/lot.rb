@@ -15,7 +15,6 @@
 #
 #  fk_rails_7afc1a8e38  (user_id => users.id)
 #
-
 class Lot < ApplicationRecord
   belongs_to :user
   has_many :bids, dependent: :destroy
