@@ -39,7 +39,6 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'annotate', '~> 2.7', '>= 2.7.1'
-
 end
 group :development, :test do
   gem 'rspec-rails', '~> 3.7'
