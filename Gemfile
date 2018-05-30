@@ -45,6 +45,7 @@ group :development, :test do
   gem 'rubocop', '~> 0.56.0', require: false
   gem 'factory_bot'
   gem 'faker'
+  gem 'simplecov', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
