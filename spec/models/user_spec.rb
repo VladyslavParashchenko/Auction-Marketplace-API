@@ -15,14 +15,28 @@
 
 require 'rails_helper'
 
-RSpec.describe User, :type=> :model do
-  context "test for user age"
-  it "has valid age" do
-    user = build(:user)
-    expect(user.valid?).to be_truthy
+RSpec.describe User, :type => :model do
+  describe "validations" do
+    before(:each) do
+      subject
     end
-  it "has not valid age" do
-    user = build(:young_user)
-    expect(user.errors[:birthday].empty?).to be_truthy
+    subject do
+      user
+    end
+    let(:user) { build(:user) }
+    describe "age validation" do
+      context "with ok user" do
+        it "is valid" do
+          expect(subject.valid?).to be_truthy
+        end
+      end
+      context "with invalid birthday" do
+        let(:user) { build(:young_user) }
+        it "is invalid" do
+          user.valid?
+          expect(user.errors[:birthday].empty?).to be_falsey
+        end
+      end
+    end
   end
 end
