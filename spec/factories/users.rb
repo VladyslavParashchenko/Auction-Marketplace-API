@@ -15,14 +15,13 @@
 #  updated_at :datetime         not null
 #
 
-
 FactoryBot.define do
   factory :user, class: User do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     phone { Faker::PhoneNumber.phone_number }
     birthday { Faker::Date.birthday 21, 100 }
-    end
+  end
   factory :young_user, class: User do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }

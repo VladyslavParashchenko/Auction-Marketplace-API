@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -13,9 +15,9 @@
 #  updated_at :datetime         not null
 #
 
-require 'rails_helper'
+require "rails_helper"
 
-RSpec.describe User, :type => :model do
+RSpec.describe User, type: :model do
   describe "validations" do
     before(:each) do
       subject
