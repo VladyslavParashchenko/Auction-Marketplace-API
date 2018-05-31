@@ -23,7 +23,7 @@ class User < ApplicationRecord
   validate :validate_age
   def validate_age
     if birthday.present? && birthday > 21.years.ago
-      errors.add :birthday, "age must be grate then 21"
+      errors.add :birthday, "age must be greater than 21"
     end
   end
 end
