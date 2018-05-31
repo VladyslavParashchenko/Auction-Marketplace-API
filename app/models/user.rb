@@ -12,10 +12,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-# factory bot
-# faker
-# simple cov
-# тест на возраст
+
 class User < ApplicationRecord
   has_many :bids
   has_many :lots, dependent: :destroy
