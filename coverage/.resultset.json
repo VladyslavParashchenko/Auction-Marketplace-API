@@ -19,7 +19,6 @@
         null,
         null,
         null,
-        null,
         1,
         1,
         1,
@@ -30,25 +29,33 @@
         1,
         1,
         1,
-        0,
+        1,
         null,
         null,
         null
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/models/application_record.rb": [
+        null,
+        null,
         1,
         1,
         null
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/controllers/application_controller.rb": [
+        null,
+        null,
         0,
         0
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/jobs/application_job.rb": [
+        null,
+        null,
         0,
         0
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/models/lot.rb": [
+        null,
+        null,
         null,
         null,
         null,
@@ -73,6 +80,8 @@
         0
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/models/order.rb": [
+        null,
+        null,
         null,
         null,
         null,
@@ -118,6 +127,8 @@
         null,
         null,
         null,
+        null,
+        null,
         0,
         0,
         0,
@@ -125,24 +136,30 @@
         0
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/channels/application_cable/connection.rb": [
+        null,
+        null,
         0,
         0,
         0,
         0
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/channels/application_cable/channel.rb": [
+        null,
+        null,
         0,
         0,
         0,
         0
       ],
       "/home/vladyslav/heroku/Auction-Marketplace-API/app/mailers/application_mailer.rb": [
+        null,
+        null,
         0,
         0,
         0,
         0
       ]
     },
-    "timestamp": 1527705855
+    "timestamp": 1527834735
   }
 }
