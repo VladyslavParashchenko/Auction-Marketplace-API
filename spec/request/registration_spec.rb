@@ -1,5 +1,5 @@
 require "rails_helper"
-
+require "json"
 RSpec.describe "User account CRUD", :type => :request do
   let(:user) {
     {
@@ -20,7 +20,8 @@ RSpec.describe "User account CRUD", :type => :request do
     }
     describe "try POST request register " do
       it "return success status" do
-        expect(subject.successful?).to be_truthy
+        response_body = JSON.parse(subject.body)
+        expect(response_body["status"] == "success").to be_truthy
       end
     end
     describe "check insertion in the database" do
@@ -48,7 +49,8 @@ RSpec.describe "User account CRUD", :type => :request do
       it "return true if password changed" do
         post "/auth", params: user
         put "/auth", params: user_with_new_password, headers: @controller.current_user.create_new_auth_token
-        expect(response.successful?).to be_truthy
+        response_body = JSON.parse(response.body)
+        expect(response_body["status"] == "success").to be_truthy
       end
     end
   end
@@ -57,7 +59,8 @@ RSpec.describe "User account CRUD", :type => :request do
       it "return true if user deleted" do
         post "/auth", params: user
         delete "/auth", params: {email: user[:email], password: user[:password] }, headers: @controller.current_user.create_new_auth_token
-        expect(response.successful?).to be_truthy
+        response_body = JSON.parse(response.body)
+        expect(response_body["status"] == "success").to be_truthy
       end
     end
   end
