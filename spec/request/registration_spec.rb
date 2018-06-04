@@ -6,11 +6,11 @@ RSpec.describe "User account CRUD", :type => :request do
         first_name:            "Ivan",
         last_name:             "Ivanov",
         email:                 "user451@gmail.com",
-        password:              "12345678",
-        password_confirmation: "12345678",
+        password:              "pass1234",
+        password_confirmation: "pass1234",
         phone:                 "1234567890",
         birthday:             50.years.ago,
-        confirmed_at: Time.now
+        allow_password_change: true
     }
   }
   describe "CREATE - POST request" do
@@ -29,19 +29,37 @@ RSpec.describe "User account CRUD", :type => :request do
         user_from_db = User.where(email: user[:email])
         expect(user_from_db.empty?).to be_falsey
       end
+      end
+    describe "check email confirmation was sent" do
+      it "true if email confirmation was sent" do
+        expect { subject }.to change(Devise.mailer.deliveries, :count).by(1)
+      end
     end
     end
   describe "UPDATE - change password" do
-  describe "try change password " do
-    it "password was changed" do
-      post "/auth", params: user
+    let(:user_with_new_password) do
       user2 = user.clone
       user2[:password] = "password"
       user2[:password_confirmation] = "password"
       user2[:current_password] = user[:password]
-      post "/auth", params: user2
-      #TODO проверить что данные вставлены
+      user2
+    end
+    describe "try change password " do
+      it "return true if password changed" do
+        post "/auth", params: user
+        put "/auth", params: user_with_new_password, headers: @controller.current_user.create_new_auth_token
+        expect(response.successful?).to be_truthy
+      end
     end
   end
+  describe "DELETE - delete user" do
+    describe "try delete user " do
+      it "return true if user deleted" do
+        post "/auth", params: user
+        delete "/auth", params: {email: user[:email], password: user[:password] }, headers: @controller.current_user.create_new_auth_token
+        expect(response.successful?).to be_truthy
+      end
+    end
   end
-  end
+end
+
