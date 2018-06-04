@@ -1,5 +1,5 @@
 require "rails_helper"
-require "json"
+require "spec_helper"
 RSpec.describe "Passwords", type: :request do
   let!(:user) { create(:client) }
 
@@ -48,7 +48,7 @@ RSpec.describe "Passwords", type: :request do
     it "should respond with success" do
 
       subject
-      json_response = JSON.parse(response.body)
+      json_response = json_parse(response.body)
       expect(json_response["message"]).to eq("Your password has been successfully updated.")
     end
   end

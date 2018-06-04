@@ -1,5 +1,5 @@
 require "rails_helper"
-require "json"
+require "spec_helper"
 RSpec.describe "User account CRUD", :type => :request do
   let(:user) {
     {
@@ -20,7 +20,7 @@ RSpec.describe "User account CRUD", :type => :request do
     }
     describe "try POST request register " do
       it "return success status" do
-        response_body = JSON.parse(subject.body)
+        response_body = json_parse(subject.body)
         expect(response_body["status"] == "success").to be_truthy
       end
     end
@@ -45,7 +45,7 @@ RSpec.describe "User account CRUD", :type => :request do
       it "return true if user deleted" do
         post "/auth", params: user
         subject
-        response_body = JSON.parse(response.body)
+        response_body = json_parse(response.body)
         expect(response_body["status"] == "success").to be_truthy
       end
     end
