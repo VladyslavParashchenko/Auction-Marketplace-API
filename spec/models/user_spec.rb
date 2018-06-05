@@ -29,7 +29,7 @@ RSpec.describe User, type: :model do
     describe "age validation" do
       context "with ok user" do
         it "is valid" do
-          expect(subject.valid?).to be_truthy
+          expect(user.errors[:birthday].empty?).to be_truthy
         end
       end
       context "with invalid birthday" do

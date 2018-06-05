@@ -28,4 +28,13 @@ FactoryBot.define do
     phone { Faker::PhoneNumber.phone_number }
     birthday { Faker::Date.birthday 8, 20 }
   end
+  factory :client, class: User do
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+    phone { Faker::PhoneNumber.phone_number }
+    birthday { Faker::Date.birthday 21, 100 }
+    password { "12345678" }
+    password_confirmation { "12345678" }
+    email { Faker::Internet.email }
+  end
 end
