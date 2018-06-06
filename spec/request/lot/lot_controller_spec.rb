@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe LotsController, type: :request do
   before(:each) do
     @user = create(:user, :password)
-    @lot = FactoryBot::attributes_for(:lot, :valid_start_and_end_time, :lot_image)
+    @lot = FactoryBot::attributes_for(:lot, :valid_start_and_end_time)
     post "/lots", params: @lot, headers: @user.create_new_auth_token
   end
   describe "GET lots#index" do
@@ -13,7 +13,7 @@ RSpec.describe LotsController, type: :request do
     it "get list of lot" do
       subject
       data = json_parse(response.body)
-      expect(data["count"] > 0).to be_truthy
+      expect(data.length > 0).to be_truthy
     end
   end
   describe "GET lots#my_lot" do
@@ -23,7 +23,7 @@ RSpec.describe LotsController, type: :request do
     it "get list of user lots" do
       subject
       data = json_parse(response.body)
-      expect(data["count"] > 0).to be_truthy
+      expect(data.length > 0).to be_truthy
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe LotsController, type: :request do
       end
     end
   end
-  describe "Delete lots#update" do
+  describe "Delete lots#destroy" do
     subject do
       delete "/lots/#{@lot[:id]}", headers: @user.create_new_auth_token
     end

@@ -4,20 +4,12 @@
 class LotsController < ApplicationController
   def index
     lots = Lot.all
-    hash = {
-        count: Lot.count,
-        lots: lots
-    }
-    render json: hash.to_json
+    render json: lots
   end
 
   def my_lots
     lots = Lot.where(user_id: current_user.id)
-    hash = {
-        count: lots.count,
-        lots: lots
-    }
-    render json: hash
+    render json: lots
   end
 
   def create

@@ -46,5 +46,5 @@ class Lot < ApplicationRecord
       errors.add :lot_end_time, "end time cannot be less than start time"
     end
   end
-  mount_uploader :image, ImageUploader
+  mount_uploader :lot_image, ImageUploader
 end
