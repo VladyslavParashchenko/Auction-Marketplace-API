@@ -6,14 +6,7 @@ RSpec.describe LotsController, type: :request do
   before(:each) do
     @user_from_db = User.last
     @user = User.first
-    @lot_arr = []
-    15.times {
-      lot = FactoryBot.build(:lot, :valid_start_and_end_time)
-      lot.user_id = @user.id
-      if lot.save
-        @lot_arr << lot
-      end
-    }
+    @lot_arr = Lot.all
   end
   describe "GET lots#index" do
     subject do
