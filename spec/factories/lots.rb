@@ -26,7 +26,6 @@
 
 FactoryBot.define do
   factory :lot, class: Lot do
-    id {Faker::Number.number(3)}
     title {"Лот #" + Faker::Number.number(3)}
     current_price {1289.94}
     estimated_price {2500}
@@ -45,5 +44,6 @@ FactoryBot.define do
     trait :lot_image do
       lot_image {File.new(File.join(::Rails.root.to_s, "spec/fixtures/files/", "test.jpg"))}
     end
+    status {:in_process}
   end
 end

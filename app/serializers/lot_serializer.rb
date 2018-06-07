@@ -27,5 +27,12 @@
 class LotSerializer < ActiveModel::Serializer
   attributes :id, :title, :current_price, :estimated_price,
              :lot_start_time, :lot_end_time, :status, :lot_image, :description
+  attribute :is_user_lot?
   has_one :user
+  def is_user_lot?
+    unless current_user.nil?
+      current_user.lots.find_by_id(:id).nil?
+    end
+    # @controller.current_user.find_by_id(:id).nil?
+  end
 end

@@ -54,4 +54,5 @@ end
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 gem "devise_token_auth"
 gem "carrierwave", "~> 1.0"
-gem 'active_model_serializers', '~> 0.10.0'
+gem "active_model_serializers", "~> 0.10.0"
+gem "kaminari"

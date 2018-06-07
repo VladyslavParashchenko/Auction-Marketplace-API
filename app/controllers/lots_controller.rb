@@ -2,13 +2,14 @@
 
 
 class LotsController < ApplicationController
+  COUNT_LOT_ON_PAGE = 10
   def index
-    lots = Lot.all
-    render json: lots
+    lots = Lot.where(status: :in_process).page(page).per(COUNT_LOT_ON_PAGE)
+    render json: lots, c_user_id: current_user.id
   end
 
   def my_lots
-    lots = Lot.where(user_id: current_user.id)
+    lots = Lot.where(user_id: current_user.id, status: :in_process).page(params[:page]).per(COUNT_LOT_ON_PAGE)
     render json: lots
   end
 
@@ -25,7 +26,7 @@ class LotsController < ApplicationController
   end
 
   def show
-    lot = Lot.find(params[:id])
+    lot = Lot.find_by_id(params[:id])
     if (lot.nil?)
       render json: { message: "Lot not found" }, status: 404
     else
@@ -34,8 +35,8 @@ class LotsController < ApplicationController
   end
 
   def destroy
-    lot = Lot.find(params[:id])
-    if lot.user_id == current_user.id
+    lot = current_user.lots.find_by_id(params[:id])
+    unless lot.nil?
       lot.destroy
       render json: { message: "Lot was destroyed" }
     else
@@ -44,8 +45,8 @@ class LotsController < ApplicationController
   end
 
   def update
-    lot = Lot.find(params[:id])
-    if lot.user_id == current_user.id
+    lot = current_user.lots.find_by_id(params[:id])
+    unless lot.nil?
       lot.update(lot_params)
       render json: lot
     else
@@ -58,5 +59,12 @@ class LotsController < ApplicationController
     def lot_params
       params.permit(:id, :title, :current_price, :estimated_price,
                     :lot_start_time, :lot_end_time, :status, :lot_image, :description)
+    end
+    def page
+      if params[:page].nil?
+        1
+      else
+        params[:page]
+      end
     end
 end
