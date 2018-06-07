@@ -4,8 +4,8 @@ require "rails_helper"
 
 RSpec.describe LotsController, type: :request do
   before(:each) do
-    @user_from_db = User.take
-    @user = create(:user, :password)
+    @user_from_db = User.last
+    @user = User.first
     @lot_arr = []
     15.times {
       lot = FactoryBot.build(:lot, :valid_start_and_end_time)
