@@ -99,6 +99,4 @@ RSpec.configure do |config|
   #   puts "required simplecov"
   # end
 end
-def json_parse(body)
-  JSON.parse(body)
-end
+

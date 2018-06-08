@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_06_072219) do
+ActiveRecord::Schema.define(version: 2018_06_04_122835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,13 +29,13 @@ ActiveRecord::Schema.define(version: 2018_06_06_072219) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title"
+    t.string "image"
     t.text "description"
     t.integer "status", default: 0
     t.decimal "current_price", precision: 8, scale: 2
     t.decimal "estimated_price", precision: 8, scale: 2
     t.datetime "lot_start_time"
     t.datetime "lot_end_time"
-    t.json "lot_image"
     t.index ["user_id"], name: "index_lots_on_user_id"
   end
 

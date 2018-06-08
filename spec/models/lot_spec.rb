@@ -6,8 +6,8 @@
 #  current_price   :decimal(8, 2)
 #  description     :text
 #  estimated_price :decimal(8, 2)
+#  image           :string
 #  lot_end_time    :datetime
-#  lot_image       :json
 #  lot_start_time  :datetime
 #  status          :integer          default("pending")
 #  title           :string

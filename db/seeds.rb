@@ -10,9 +10,4 @@
 require 'factory_bot'
 FactoryBot.find_definitions
 users = FactoryBot.create_list(:client, 5)
-user = User.first
-15.times {
-  lot = FactoryBot.build(:lot, :valid_start_and_end_time)
-  lot.user_id = user.id
-  lot.save
-}
+users.map {|user| FactoryBot.create_list(:lot, 5, user: user) }

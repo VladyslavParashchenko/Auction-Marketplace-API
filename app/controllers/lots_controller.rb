@@ -3,34 +3,31 @@
 
 class LotsController < ApplicationController
   COUNT_LOT_ON_PAGE = 10
+  before_action :authenticate_user!
+
   def index
-    lots = Lot.where(status: :in_process).page(page).per(COUNT_LOT_ON_PAGE)
-    render json: lots, c_user_id: current_user.id
+    lots = Lot.where(status: :in_process)
+    render_collection(lots)
   end
 
   def my_lots
-    lots = Lot.where(user_id: current_user.id, status: :in_process).page(params[:page]).per(COUNT_LOT_ON_PAGE)
-    render json: lots
+    user_id = User.find(current_user.id)
+    lots = Lot.filter_my_lot(params[:filter], user_id)
+    render_collection(lots)
   end
 
   def create
     lot = current_user.lots.new(lot_params)
-    if lot.save
-      answer = { :message => "lot was created", "id" => lot.id }
-      render json: answer
-    else
-      lot
-      answer = { :message => "error", "id" => lot.id }
-      render json: answer
-    end
+    lot.save
+    render_item(lot)
   end
 
   def show
     lot = Lot.find_by_id(params[:id])
     if (lot.nil?)
-      render json: { message: "Lot not found" }, status: 404
+      render_error({ error: "Lot not found" }, 404)
     else
-      render json: lot
+      render_item(lot)
     end
   end
 
@@ -38,9 +35,9 @@ class LotsController < ApplicationController
     lot = current_user.lots.find_by_id(params[:id])
     unless lot.nil?
       lot.destroy
-      render json: { message: "Lot was destroyed" }
+      render_item(lot)
     else
-      render json: { message: "You do not have rights to this action" }, status: 403
+      render_error({ error: "You do not have rights to this action" }, 403)
     end
   end
 
@@ -48,9 +45,9 @@ class LotsController < ApplicationController
     lot = current_user.lots.find_by_id(params[:id])
     unless lot.nil?
       lot.update(lot_params)
-      render json: lot
+      render_item(lot)
     else
-      render json: { message: "You do not have rights to this action" }, status: 403
+      render_error({ error: "You do not have rights to this action" }, 403)
     end
   end
 
@@ -58,13 +55,21 @@ class LotsController < ApplicationController
 
     def lot_params
       params.permit(:id, :title, :current_price, :estimated_price,
-                    :lot_start_time, :lot_end_time, :status, :lot_image, :description)
+                    :lot_start_time, :lot_end_time, :status, :image, :description)
     end
-    def page
-      if params[:page].nil?
-        1
+
+    def render_collection(resources)
+      unless resources.nil?
+        render json: resources.page(params[:page]).per(params[:per])
       else
-        params[:page]
+        render json: {}
       end
+    end
+
+    def render_item(item)
+      render json: { resource: item, errors: item.errors }
+    end
+    def render_error(errors, status)
+      render json: { errors: errors }, status: status
     end
 end
