@@ -7,3 +7,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require 'factory_bot'
+FactoryBot.find_definitions
+users = FactoryBot.create_list(:client, 5)
+users.map {|user| FactoryBot.create_list(:lot, 5, user: user) }

@@ -93,12 +93,10 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
-  if ENV["RAILS_ENV"] == "test"
-    require "simplecov"
-    SimpleCov.start "rails"
-    puts "required simplecov"
-  end
+  # if ENV["RAILS_ENV"] == "test"
+  #   require "simplecov"
+  #   SimpleCov.start "rails"
+  #   puts "required simplecov"
+  # end
 end
-def json_parse(body)
-  JSON.parse(body)
-end
+
