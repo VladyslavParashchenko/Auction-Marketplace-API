@@ -4,11 +4,12 @@
 #
 # Table name: bids
 #
-#  id         :bigint(8)        not null, primary key
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  lot_id     :bigint(8)
-#  user_id    :bigint(8)
+#  id             :bigint(8)        not null, primary key
+#  proposed_price :decimal(8, 2)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  lot_id         :bigint(8)
+#  user_id        :bigint(8)
 #
 # Indexes
 #
@@ -25,4 +26,18 @@ class Bid < ApplicationRecord
   belongs_to :user
   has_one :order
   belongs_to :lot
+  validates :proposed_price, presence: true, numericality: { greater_than: 0 }
+  validate :validate_proposed_price
+  def validate_proposed_price
+    current_lot = Lot.find_by_id(lot_id)
+    current_price = current_lot.bids.maximum(:proposed_price)
+    if current_price.nil?
+      current_price = 0
+    end
+    unless current_lot.nil?
+      if current_price >= proposed_price
+        errors.add :proposed_price, "proposed price must be higher than the previous one"
+      end
+    end
+  end
 end

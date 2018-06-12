@@ -10,7 +10,7 @@ RSpec.describe LotsController, type: :request do
   end
   describe "GET lots#index" do
     subject do
-      get "/lots", params: {page: 1, per: 10}, headers: @user.create_new_auth_token
+      get "/lots", params: { page: 1, per: 10 }, headers: @user.create_new_auth_token
     end
     it "should return list of lot" do
       subject
@@ -43,14 +43,13 @@ RSpec.describe LotsController, type: :request do
     end
     context "select only lots that user won/try to win" do
       subject do
-        get "/lots/my", params: {filter: :participation, page: 1, per: 10}, headers: @user.create_new_auth_token
-        # request.headers.merge! @user.create_new_auth_token
+        get "/lots/my", params: { filter: :participation, page: 1, per: 10 }, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
         data = json_parse(response.body)
         data.each do |lot|
-          expect(Bid.where(lot_id: lot["user"]["id"]).user_id).to eq(@user.id)
+          expect(lot["user"]["id"]).to eq(@user.id)
         end
       end
     end
@@ -115,7 +114,7 @@ RSpec.describe LotsController, type: :request do
       it "should change title of lot" do
         subject
         data = json_parse(response.body)
-        expect(data["resource"]["title"] == new_title).to be_truthy
+        expect(data["title"] == new_title).to be_truthy
       end
     end
     describe "update not my lot" do
