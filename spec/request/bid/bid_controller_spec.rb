@@ -18,7 +18,7 @@ RSpec.describe BidsController, type: :request do
       expect(data["id"].to_i == @bid.id).to be_truthy
     end
   end
-  describe "GET bid#show" do
+  describe "GET Lot#show" do
     subject do
       get "/lots/#{@lot.id}/", headers: @user.create_new_auth_token
     end
