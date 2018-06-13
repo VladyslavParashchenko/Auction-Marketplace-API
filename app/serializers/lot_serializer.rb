@@ -29,23 +29,8 @@ class LotSerializer < ActiveModel::Serializer
              :lot_start_time, :lot_end_time, :status, :image, :description
   attribute :is_current_user_lot?
   has_one :user
-  has_many :bids
+  has_many :bids, sequence: Helpers::Sequence.new if
   def is_current_user_lot?
-    unless current_user.nil?
-      current_user.lots.find_by_id(:id).nil?
-    end
+    current_user.id == object.user_id
   end
-  class BidSerializer < ActiveModel::Serializer
-    attributes :proposed_price, :created_at
-    attribute :user do
-      number  = @instance_options[:sequence].number
-      if current_user.id == object.user_id
-        username = "You"
-      else
-        username = "Customer #{number}"
-      end
-      username
-    end
   end
-
-end

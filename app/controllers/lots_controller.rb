@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "helpers/render_helper"
 class LotsController < ApplicationController
-  before_action :authenticate_user!
 
   def index
     lots = Lot.where(status: :in_process)
@@ -17,46 +15,25 @@ class LotsController < ApplicationController
 
   def create
     lot = current_user.lots.new(lot_params)
-    if lot.save
-      render_item(lot)
-    else
-      render_error(params, lot.error, 400)
-    end
+    lot.save
+    render_item(lot)
   end
 
   def show
-    lot = Lot.find_by_id(params[:id])
-    if (lot.nil?)
-      render_error(params, {error: "Lot not found"}, 404)
-    else
-      render_item(lot)
-    end
+    lot = Lot.find(params[:id])
+    render_item(lot)
   end
 
   def destroy
-    lot = current_user.lots.find_by_id(params[:id])
-    unless lot.nil?
-      if lot.destroy
-        render_item(lot)
-      else
-        render_error(params, lot.error, 423)
-      end
-    else
-      render_error(params, {error: "You do not have rights to this action"}, 403)
-    end
+    lot = current_user.lots.find(params[:id])
+    lot.destroy
+    render_item(lot)
   end
 
   def update
-    lot = current_user.lots.find_by_id(params[:id])
-    unless lot.nil?
-      if lot.update(lot_params)
-        render_item(lot)
-      else
-        render_error(params, lot.errors, 403)
-      end
-    else
-      render_error(params, {error: "You do not have rights to this action"}, 403)
-    end
+    lot = current_user.lots.find(params[:id])
+    lot.update(lot_params)
+    render_item(lot)
   end
 
   private

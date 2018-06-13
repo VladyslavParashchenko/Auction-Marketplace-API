@@ -22,7 +22,7 @@
 
 FactoryBot.define do
   factory :bid, class: Bid do
-    proposed_price {Faker::Number.decimal(4,2)}
+    proposed_price { self.lot.current_price.to_f + Faker::Number.decimal(4,2).to_f }
     association :lot, factory: :lot
     association :user, factory: :client
   end

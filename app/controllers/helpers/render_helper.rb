@@ -1,17 +1,18 @@
 require_relative "sequence"
+
 def render_collection(resources)
-  unless resources.nil?
-    render json: resources.page(params[:page]).per(params[:per])
-  else
-    render json: {}
-  end
+  render json: resources.page(params[:page]).per(params[:per])
 end
 
 def render_item(item)
-  sequence = Sequence.new
-  render json: item, sequence: sequence
+  if item.errors.empty?
+    sequence = Helpers::Sequence.new
+    render json: item, sequence: sequence
+  else
+    render json: {errors: item.errors}, status: 400
+  end
 end
 
-def render_error(params, errors, status)
-  render json: {params: params, errors: errors}, status: status
+def render_error(errors, status)
+  render json: {errors: errors}, status: status
 end
