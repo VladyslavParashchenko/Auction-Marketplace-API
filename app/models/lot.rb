@@ -62,4 +62,7 @@ class Lot < ApplicationRecord
     end
     lots
   end
+  def update_price(proposed_price)
+    update(current_price: proposed_price)
+  end
 end

@@ -1,9 +1,9 @@
 class BidsController < ApplicationController
   def create
-    lot = Lot.find(params[:lot_id])
-    bid = lot.bids.new(bid_params)
-    bid.user_id = current_user.id
-    bid.save
+    bid = Lot.find(params[:lot_id]).bids.new(bid_params)
+    if bid.save
+      bid.lot.update_price(bid.proposed_price)
+    end
     render_item(bid)
   end
   def show
@@ -14,6 +14,6 @@ class BidsController < ApplicationController
   private
 
   def bid_params
-    params.permit(:proposed_price)
+    params.permit(:proposed_price).merge({user_id: current_user.id})
   end
 end

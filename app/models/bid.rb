@@ -33,8 +33,6 @@ class Bid < ApplicationRecord
     current_price = lot.current_price
     if current_price >= proposed_price
       errors.add :proposed_price, "proposed price must be higher than the previous one"
-    else
-      lot.current_price = proposed_price
     end
   end
 end

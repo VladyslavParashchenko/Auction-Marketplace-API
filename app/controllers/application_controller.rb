@@ -3,6 +3,7 @@ require "helpers/render_helper"
 
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
+  include Json_Helper
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found_handler
