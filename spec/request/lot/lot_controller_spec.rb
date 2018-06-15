@@ -4,9 +4,15 @@ require "rails_helper"
 
 RSpec.describe LotsController, type: :request do
   before(:each) do
+    @users = create_list(:client, 5)
+    @users.map {|user| list = create_list(:lot, 5, user: user)}
     @user_from_db = User.last
     @user = User.first
     @lot_arr = Lot.all
+    @lot_arr.map do |lot|
+      create_list(:bid, 10, user: @user_from_db, lot: lot)
+      create_list(:bid, 10, user: @user, lot: lot)
+    end
   end
   describe "GET lots#index" do
     subject do
@@ -18,10 +24,21 @@ RSpec.describe LotsController, type: :request do
       expect(data.length).to eq(10)
     end
   end
+  describe "GET Lot#show" do
+    subject do
+      get "/lots/#{@lot_arr.last.id}/", headers: @user.create_new_auth_token
+    end
+    it "should return list of bid" do
+      subject
+      data = json_parse(response.body)
+      expect(data["bids"].count == @lot_arr.last.bids.count).to be_truthy
+    end
+  end
+
   describe "GET lots#my_lot" do
     context "select only lots that user create for sale" do
       subject do
-        get "/lots/my", params: { filter: :all, page: 1, per: 10 }, headers: @user.create_new_auth_token
+        get "/lots/my", params: {filter: :all, page: 1, per: 10}, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
@@ -44,22 +61,27 @@ RSpec.describe LotsController, type: :request do
     context "select only lots that user won/try to win" do
       subject do
         get "/lots/my", params: {filter: :participation, page: 1, per: 10}, headers: @user.create_new_auth_token
-        # request.headers.merge! @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
         data = json_parse(response.body)
         data.each do |lot|
-          expect(Bid.where(lot_id: lot["user"]["id"]).user_id).to eq(@user.id)
+          is_user_lot = false
+          lot["bids"].each do |bid|
+            if bid["user"] == "You"
+              is_user_lot = true
+            end
+          end
+          expect(is_user_lot).to be_truthy
         end
       end
     end
   end
   describe "POST lots#create" do
+    let(:lot) do
+      FactoryBot::attributes_for(:lot)
+    end
     describe "try create new lot with image" do
-      let(:lot) do
-        FactoryBot::attributes_for(:lot)
-      end
       subject do
         post "/lots", params: lot, headers: @user.create_new_auth_token
       end
@@ -67,6 +89,7 @@ RSpec.describe LotsController, type: :request do
         expect {subject}.to change {Lot.count}.by(1)
       end
     end
+    include_examples "create operation without an authenticated user", "/lots/"
   end
   describe "Delete lots#destroy" do
     context "autorization user" do
@@ -115,7 +138,7 @@ RSpec.describe LotsController, type: :request do
       it "should change title of lot" do
         subject
         data = json_parse(response.body)
-        expect(data["resource"]["title"] == new_title).to be_truthy
+        expect(data["title"] == new_title).to be_truthy
       end
     end
     describe "update not my lot" do

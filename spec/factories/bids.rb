@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: bids
@@ -22,17 +20,10 @@
 #  fk_rails_e173de2ed3  (user_id => users.id)
 #
 
-class Bid < ApplicationRecord
-  belongs_to :user
-  has_one :order
-  belongs_to :lot
-  validates :proposed_price, presence: true, numericality: {greater_than: 0}
-  validate :validate_proposed_price
-
-  def validate_proposed_price
-    current_price = lot.current_price
-    if current_price >= proposed_price
-      errors.add :proposed_price, "proposed price must be higher than the previous one"
-    end
+FactoryBot.define do
+  factory :bid, class: Bid do
+    proposed_price { self.lot.current_price.to_f + Faker::Number.decimal(4,2).to_f }
+    association :lot, factory: :lot
+    association :user, factory: :client
   end
 end

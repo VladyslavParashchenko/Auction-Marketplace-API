@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: bids
@@ -22,17 +20,15 @@
 #  fk_rails_e173de2ed3  (user_id => users.id)
 #
 
-class Bid < ApplicationRecord
-  belongs_to :user
-  has_one :order
-  belongs_to :lot
-  validates :proposed_price, presence: true, numericality: {greater_than: 0}
-  validate :validate_proposed_price
-
-  def validate_proposed_price
-    current_price = lot.current_price
-    if current_price >= proposed_price
-      errors.add :proposed_price, "proposed price must be higher than the previous one"
+class BidSerializer < ActiveModel::Serializer
+  attributes :proposed_price, :created_at
+  attribute :user do
+    number = @instance_options[:sequence].nil? ? "" : @instance_options[:sequence].number
+    if current_user.id == object.user_id
+      username = "You"
+    else
+      username = "Customer #{number}"
     end
+    username
   end
 end
