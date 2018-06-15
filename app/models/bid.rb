@@ -28,7 +28,13 @@ class Bid < ApplicationRecord
   belongs_to :lot
   validates :proposed_price, presence: true, numericality: {greater_than: 0}
   validate :validate_proposed_price
-
+  # validate :validate_lot_status
+  def validate_lot_status
+    puts lot.status
+    if lot.status != "in_process"
+      errors.add :lot_status, "you can not bid on this lot now"
+    end
+  end
   def validate_proposed_price
     current_price = lot.current_price
     if current_price >= proposed_price

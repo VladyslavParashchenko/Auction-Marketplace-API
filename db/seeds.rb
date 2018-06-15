@@ -11,10 +11,8 @@ require 'factory_bot'
 FactoryBot.find_definitions
 users = FactoryBot.create_list(:client, 5)
 users.map {|user| FactoryBot.create_list(:lot, 5, user: user)}
-users.map {|user|
-  user.lots.map {|lot|
-    lot_maximum_price = lot.bids.maximum(:proposed_price)
-    price = lot_maximum_price.nil? ? rand(1000) : lot_maximum_price +rand(1000)
-    FactoryBot.create(:bid, lot: lot, user: user, proposed_price: price)
-  }
-}
+users.map do |user|
+  user.lots.map do |lot|
+    FactoryBot.create(:bid, lot: lot, user: user)
+  end
+end

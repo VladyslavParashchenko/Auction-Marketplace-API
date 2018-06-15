@@ -10,6 +10,7 @@ RSpec.describe LotsController, type: :request do
     @user = User.first
     @lot_arr = Lot.all
     @lot_arr.map do |lot|
+      lot.update(status: :in_process)
       create_list(:bid, 10, user: @user_from_db, lot: lot)
       create_list(:bid, 10, user: @user, lot: lot)
     end
@@ -86,7 +87,7 @@ RSpec.describe LotsController, type: :request do
         post "/lots", params: lot, headers: @user.create_new_auth_token
       end
       it "should create new lot" do
-        expect {subject}.to change {Lot.count}.by(1)
+        expect { subject }.to change {Lot.count}.by(1)
       end
     end
     include_examples "create operation without an authenticated user", "/lots/"

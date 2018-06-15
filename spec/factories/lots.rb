@@ -42,7 +42,7 @@ FactoryBot.define do
     trait :lot_image do
       image {File.new(File.join(::Rails.root.to_s, "spec/fixtures/files/", "test.jpg"))}
     end
-    status {:in_process}
+    status {:pending}
     association :user, factory: :user
   end
 end

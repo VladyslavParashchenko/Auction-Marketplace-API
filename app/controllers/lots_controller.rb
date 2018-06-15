@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require "sidekiq/api"
 class LotsController < ApplicationController
 
   def index
@@ -11,6 +11,7 @@ class LotsController < ApplicationController
     user_id = User.find(current_user.id)
     lots = Lot.filter_my_lot(params[:filter], user_id)
     render_collection(lots)
+
   end
 
   def create
@@ -42,6 +43,7 @@ class LotsController < ApplicationController
     params.permit(:id, :title, :current_price, :estimated_price,
                   :lot_start_time, :lot_end_time, :status, :image, :description)
   end
+
 
 end
 

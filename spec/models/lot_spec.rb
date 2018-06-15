@@ -25,7 +25,7 @@
 #
 
 require "rails_helper"
-
+require "sidekiq/api"
 RSpec.describe Lot, type: :model do
   describe "validations" do
     before(:each) do
@@ -54,5 +54,32 @@ RSpec.describe Lot, type: :model do
         end
       end
     end
+  end
+  describe "action jobs test " do
+    let(:lot) {create(:lot, user: create(:client))}
+    describe "create new lot" do
+      subject {lot}
+      it "2 jobs will be created" do
+        expect {subject}.to change {Sidekiq::ScheduledSet.new.size}.by(2)
+      end
+    end
+    describe "changing lot" do
+      before(:each) do
+        lot
+      end
+      describe "delete lot" do
+        subject { lot.destroy }
+        it "2 jobs will be created and deleted" do
+          expect {subject}.to change { Sidekiq::ScheduledSet.new.size }.by(-2)
+        end
+      end
+      describe "update lot" do
+        subject { lot.update(lot_start_time: Time.now + 3.days) }
+        it "2 jobs will be created and deleted" do
+          expect { subject }.to change { Sidekiq::ScheduledSet.new.size }.by(0)
+        end
+      end
+    end
+
   end
 end
