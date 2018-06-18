@@ -5,10 +5,12 @@
 #  id              :bigint(8)        not null, primary key
 #  current_price   :decimal(8, 2)
 #  description     :text
+#  end_jid         :string
 #  estimated_price :decimal(8, 2)
 #  image           :string
 #  lot_end_time    :datetime
 #  lot_start_time  :datetime
+#  start_jid       :string
 #  status          :integer          default("pending")
 #  title           :string
 #  created_at      :datetime         not null
@@ -29,6 +31,7 @@ require "sidekiq/api"
 RSpec.describe Lot, type: :model do
   describe "validations" do
     before(:each) do
+
       subject
     end
     subject do
@@ -60,6 +63,7 @@ RSpec.describe Lot, type: :model do
     describe "create new lot" do
       subject {lot}
       it "2 jobs will be created" do
+        ActiveJob::Base.queue_adapter = :sidekiq
         expect {subject}.to change {Sidekiq::ScheduledSet.new.size}.by(2)
       end
     end
@@ -67,16 +71,12 @@ RSpec.describe Lot, type: :model do
       before(:each) do
         lot
       end
-      describe "delete lot" do
-        subject { lot.destroy }
-        it "2 jobs will be created and deleted" do
-          expect {subject}.to change { Sidekiq::ScheduledSet.new.size }.by(-2)
-        end
-      end
       describe "update lot" do
         subject { lot.update(lot_start_time: Time.now + 3.days) }
-        it "2 jobs will be created and deleted" do
-          expect { subject }.to change { Sidekiq::ScheduledSet.new.size }.by(0)
+        it "should change jid " do
+          lot_old_jid = lot.start_jid
+          subject
+          expect(lot.start_jid).not_to eq(lot_old_jid)
         end
       end
     end

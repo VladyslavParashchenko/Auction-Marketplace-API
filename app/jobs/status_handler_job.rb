@@ -2,9 +2,8 @@ class StatusHandlerJob < ApplicationJob
   queue_as :default
 
   def perform(lot_id, status)
-    Lot.find(lot_id).update(status: status)
-    if status == "closed"
-      LotWinnerMailer.send_mail_to_lot_winner(Lot.find(lot_id)).deliver_now
+    if (self.jid == Lot.find(lot_id).start_jid) || (self.jid == Lot.find(lot_id).end_jid)
+      Lot.find(lot_id).update(status: status)
     end
   end
 end

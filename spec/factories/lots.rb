@@ -5,10 +5,12 @@
 #  id              :bigint(8)        not null, primary key
 #  current_price   :decimal(8, 2)
 #  description     :text
+#  end_jid         :string
 #  estimated_price :decimal(8, 2)
 #  image           :string
 #  lot_end_time    :datetime
 #  lot_start_time  :datetime
+#  start_jid       :string
 #  status          :integer          default("pending")
 #  title           :string
 #  created_at      :datetime         not null
@@ -43,6 +45,6 @@ FactoryBot.define do
       image {File.new(File.join(::Rails.root.to_s, "spec/fixtures/files/", "test.jpg"))}
     end
     status {:pending}
-    association :user, factory: :user
+    association :user, factory: :client
   end
 end

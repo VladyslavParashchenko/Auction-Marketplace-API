@@ -6,10 +6,12 @@
 #  id              :bigint(8)        not null, primary key
 #  current_price   :decimal(8, 2)
 #  description     :text
+#  end_jid         :string
 #  estimated_price :decimal(8, 2)
 #  image           :string
 #  lot_end_time    :datetime
 #  lot_start_time  :datetime
+#  start_jid       :string
 #  status          :integer          default("pending")
 #  title           :string
 #  created_at      :datetime         not null
@@ -39,7 +41,9 @@ class Lot < ApplicationRecord
   validate :is_status_pending, on: :create
   after_create :add_jobs
   after_update :recreate_jobs
-  before_destroy :delete_jobs
+  after_update :send_mail_if_closed, if: :saved_change_to_lot_end_time?
+  after_update :send_status, if: :saved_change_to_status?
+
   def validate_start_time
     if lot_start_time < Time.now
       errors.add :lot_start_time, "start time cannot be less than current time"
@@ -53,7 +57,7 @@ class Lot < ApplicationRecord
   end
 
   def is_status_pending
-    if status != "pending"
+    unless pending?
       errors.add :status, "Lot can be created only with status pending"
     end
   end
@@ -76,29 +80,22 @@ class Lot < ApplicationRecord
     update(current_price: proposed_price)
   end
 
-  def delete_jobs
-    jobs = Sidekiq::ScheduledSet.new.take(Sidekiq::ScheduledSet.new.size)
-    jobs_jid_for_deleting = []
-    jobs.each do |job|
-      job_values = json_parse(job.value)
-      if (job_values["args"].first["arguments"][0] == id) && (job_values["wrapped"] == "StatusHandlerJob")
-        jobs_jid_for_deleting << job_values["jid"]
-      end
-    end
-    jobs_jid_for_deleting.each do |jid|
-      job_for_deleting = Sidekiq::ScheduledSet.new.find_job(jid)
-      job_for_deleting.delete
-    end
-
-  end
+  private
 
   def add_jobs
-    StatusHandlerJob.set(wait_until: lot_start_time).perform_later(id, "in_process")
-    StatusHandlerJob.set(wait_until: lot_end_time).perform_later(id, "closed")
+    new_start_jid = StatusHandlerJob.set(wait_until: lot_start_time).perform_later(id, "in_process").provider_job_id
+    new_end_jid = StatusHandlerJob.set(wait_until: lot_end_time).perform_later(id, "closed").provider_job_id
+    update_column(:start_jid, new_start_jid)
+    update_column(:end_jid, new_end_jid)
   end
 
   def recreate_jobs
-    delete_jobs
     add_jobs
+  end
+
+  def send_mail_if_closed
+    if closed?
+      LotWinnerMailer.send_mail_to_lot_winner(Lot.find(lot_id)).deliver_now
+    end
   end
 end

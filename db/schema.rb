@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_09_172402) do
+ActiveRecord::Schema.define(version: 2018_06_18_112006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 2018_06_09_172402) do
     t.decimal "estimated_price", precision: 8, scale: 2
     t.datetime "lot_start_time"
     t.datetime "lot_end_time"
+    t.string "start_jid"
+    t.string "end_jid"
     t.index ["user_id"], name: "index_lots_on_user_id"
   end
 
