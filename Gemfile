@@ -56,3 +56,5 @@ gem "devise_token_auth"
 gem "carrierwave", "~> 1.0"
 gem "active_model_serializers", "~> 0.10.0"
 gem "kaminari"
+gem "dotenv-rails", groups: [:development, :test]
+gem "sidekiq"

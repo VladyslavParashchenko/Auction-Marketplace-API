@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-
 RSpec.describe LotsController, type: :request do
+  before(:all) do
+
+  end
   before(:each) do
     @users = create_list(:client, 5)
-    @users.map {|user| list = create_list(:lot, 5, user: user)}
+    @users.each {|user| list = create_list(:lot, 5, user: user)}
     @user_from_db = User.last
     @user = User.first
     @lot_arr = Lot.all
-    @lot_arr.map do |lot|
+    @lot_arr.each do |lot|
+      lot.update_column(:status, :in_process)
       create_list(:bid, 10, user: @user_from_db, lot: lot)
       create_list(:bid, 10, user: @user, lot: lot)
     end
@@ -86,7 +89,7 @@ RSpec.describe LotsController, type: :request do
         post "/lots", params: lot, headers: @user.create_new_auth_token
       end
       it "should create new lot" do
-        expect {subject}.to change {Lot.count}.by(1)
+        expect { subject }.to change {Lot.count}.by(1)
       end
     end
     include_examples "create operation without an authenticated user", "/lots/"
@@ -95,7 +98,7 @@ RSpec.describe LotsController, type: :request do
     context "autorization user" do
       describe "delete user lot" do
         subject do
-          delete "/lots/#{@lot_arr.first.id}", headers: @user.create_new_auth_token
+          delete "/lots/#{@user.lots.first.id}", headers: @user.create_new_auth_token
         end
         it "should delete lot" do
           expect {subject}.to change {Lot.count}.by(-1)

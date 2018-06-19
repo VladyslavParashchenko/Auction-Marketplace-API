@@ -7,10 +7,10 @@
 default: &default
     adapter: postgresql
     encoding: utf8
-    database: auction_database
+    database: <%= ENV['DB_NAME'] %>
     pool: 5
-    username: vladyslav
-    password: 12345678
+    username: <%= ENV['DB_USER_NAME'] %>
+    password: <%= ENV['PASSWORD'] %>
 
 development:
   <<: *default

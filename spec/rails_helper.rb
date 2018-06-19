@@ -29,6 +29,7 @@ require "support/json_helper.rb"
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 FactoryBot.find_definitions
+ActiveJob::Base.queue_adapter = :test
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
