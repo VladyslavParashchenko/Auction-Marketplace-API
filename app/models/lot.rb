@@ -43,7 +43,6 @@ class Lot < ApplicationRecord
   after_update :recreate_jobs
   after_update :send_mail_if_closed, if: :saved_change_to_lot_end_time?
   after_update :send_status, if: :saved_change_to_status?
-
   def validate_start_time
     if lot_start_time < Time.now
       errors.add :lot_start_time, "start time cannot be less than current time"
@@ -79,7 +78,9 @@ class Lot < ApplicationRecord
   def update_price(proposed_price)
     update(current_price: proposed_price)
   end
-
+  def find_winner
+    bids.order("proposed_price desc").first.user
+  end
   private
 
   def add_jobs

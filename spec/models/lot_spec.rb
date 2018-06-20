@@ -31,7 +31,6 @@ require "sidekiq/api"
 RSpec.describe Lot, type: :model do
   describe "validations" do
     before(:each) do
-
       subject
     end
     subject do
@@ -80,6 +79,5 @@ RSpec.describe Lot, type: :model do
         end
       end
     end
-
   end
 end
