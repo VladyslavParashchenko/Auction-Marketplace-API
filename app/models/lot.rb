@@ -88,10 +88,6 @@ class Lot < ApplicationRecord
     bids.order("proposed_price").last
   end
 
-  def find_winner_order
-    bids.order("proposed_price").last.order
-  end
-
   private
 
   def add_jobs
@@ -107,7 +103,7 @@ class Lot < ApplicationRecord
 
   def send_mail_if_closed
     if closed?
-      LotWinnerMailer.send_mail_to_lot_winner(find_winner_bid).deliver_now
+      NotificationMailer.send_seller_lot_purchased(find_winner_bid).deliver_later
     end
   end
 end
