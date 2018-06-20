@@ -3,7 +3,7 @@ class BidsController < ApplicationController
     bid = Lot.find(params[:lot_id]).bids.new(bid_params)
     if bid.save
       ActionCable.server.broadcast("lot##{bid.lot.id}", BidActiveCableSerializer.new(bid, :current_user=>current_user.id).as_json)
-      bid.lot.update_price(bid.proposed_price)
+      bid.lot.update_column(:current_price, bid.proposed_price)
     end
     render_item(bid)
   end

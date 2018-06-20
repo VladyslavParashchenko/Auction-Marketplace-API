@@ -2,9 +2,6 @@
 
 require "rails_helper"
 RSpec.describe LotsController, type: :request do
-  before(:all) do
-
-  end
   before(:each) do
     @users = create_list(:client, 5)
     @users.each {|user| list = create_list(:lot, 5, user: user)}
@@ -28,14 +25,32 @@ RSpec.describe LotsController, type: :request do
     end
   end
   describe "GET Lot#show" do
-    subject do
-      get "/lots/#{@lot_arr.last.id}/", headers: @user.create_new_auth_token
+    describe "show not closed lot without order" do
+      subject do
+        get "/lots/#{@lot_arr.last.id}/", headers: @user.create_new_auth_token
+      end
+      it "should return list of bid" do
+        subject
+        data = json_parse(response.body)
+        expect(data["bids"].count == @lot_arr.last.bids.count).to be_truthy
+      end
     end
-    it "should return list of bid" do
-      subject
-      data = json_parse(response.body)
-      expect(data["bids"].count == @lot_arr.last.bids.count).to be_truthy
+    describe "show closed lot with order" do
+      before(:each) do
+        @lot_for_order = @lot_arr.order("id").last
+        @lot_for_order.update_column(:status, :closed)
+        @order = create(:order, bid: @lot_for_order.bids.order("proposed_price").last)
+      end
+      subject do
+        get "/lots/#{@lot_for_order.id}/", headers: @user.create_new_auth_token
+      end
+      it "should return list of bid" do
+        subject
+        data = json_parse(response.body)
+        expect(data["lot_order"]["id"]).to eq(@order.id)
+      end
     end
+
   end
 
   describe "GET lots#my_lot" do
@@ -89,7 +104,7 @@ RSpec.describe LotsController, type: :request do
         post "/lots", params: lot, headers: @user.create_new_auth_token
       end
       it "should create new lot" do
-        expect { subject }.to change {Lot.count}.by(1)
+        expect {subject}.to change {Lot.count}.by(1)
       end
     end
     include_examples "create operation without an authenticated user", "/lots/"

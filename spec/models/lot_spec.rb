@@ -71,12 +71,29 @@ RSpec.describe Lot, type: :model do
         lot
       end
       describe "update lot" do
-        subject { lot.update(lot_start_time: Time.now + 3.days) }
+        subject {lot.update(lot_start_time: Time.now + 3.days)}
         it "should change jid " do
           lot_old_jid = lot.start_jid
           subject
           expect(lot.start_jid).not_to eq(lot_old_jid)
         end
+      end
+    end
+  end
+  describe "action jobs test " do
+    before(:each) do
+      @lot = create(:lot)
+      @bids = create_list(:bid, 5, lot: @lot)
+      @lot.update_column(:status, :closed)
+    end
+    let(:orders) {create(:order, bid: @bids.last)}
+    describe "testing lot helpers" do
+      it "should find lot winner" do
+        orders
+        expect(@lot.find_winner.id).to eq(@bids.last.user.id)
+      end
+      it "should find lot winner" do
+        expect(@lot.find_winner_bid.id).to eq(@bids.last.id)
       end
     end
   end

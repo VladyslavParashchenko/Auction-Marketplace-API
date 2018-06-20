@@ -30,7 +30,6 @@ class Bid < ApplicationRecord
   validate :validate_proposed_price
   # validate :validate_lot_status
   def validate_lot_status
-    puts lot.status
     if lot.status != "in_process"
       errors.add :lot_status, "you can not bid on this lot now"
     end
@@ -39,6 +38,8 @@ class Bid < ApplicationRecord
     current_price = lot.current_price
     if current_price >= proposed_price
       errors.add :proposed_price, "proposed price must be higher than the previous one"
+    else
+      lot.update_column(:current_price, proposed_price)
     end
   end
 end
