@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: lots
@@ -31,11 +32,11 @@ require "carrierwave/orm/activerecord"
 class Lot < ApplicationRecord
   belongs_to :user
   has_many :bids, dependent: :destroy
-  has_one :lot, through: :bid
-  enum status: {pending: 0, in_process: 1, closed: 2}
+  has_one :order, through: :bids
+  enum status: { pending: 0, in_process: 1, closed: 2 }
   validates :title, presence: true
-  validates :current_price, presence: true, numericality: {greater_than: 0}
-  validates :estimated_price, presence: true, numericality: {greater_than: 0}
+  validates :current_price, presence: true, numericality: { greater_than: 0 }
+  validates :estimated_price, presence: true, numericality: { greater_than: 0 }
   validate :validate_start_time
   validate :validate_end_time
   validate :is_status_pending, on: :create
@@ -59,19 +60,18 @@ class Lot < ApplicationRecord
       errors.add :status, "Lot can be created only with status pending"
     end
   end
-
   mount_uploader :image, ImageUploader
 
-  def self.filter_my_lot(filter, user_id)
+  def self.filter_my_lot(filter, user)
+    # puts user_id.id
     case filter
     when "all"
-      lots = Lot.left_outer_joins(:bids).where("bids.user_id": user_id).or(Lot.left_outer_joins(:bids).where("lots.user_id": user_id))
+      Lot.left_outer_joins(:bids).where("bids.user_id": user.id).or(Lot.left_outer_joins(:bids).where("lots.user_id": user.id))
     when "created"
-      lots = Lot.where(user_id: user_id)
+      Lot.where(user_id: user.id)
     when "participation"
-      lots = Lot.joins(:bids).where(bids: {user_id: user_id})
+      Lot.joins(:bids).where(bids: { user_id: user.id })
     end
-    lots
   end
 
   def update_price(proposed_price)
@@ -89,23 +89,27 @@ class Lot < ApplicationRecord
   def find_winner_order
     bids.order("proposed_price").last.order
   end
-
+  def close_lot
+    update_column(:start_jid, "")
+    update_column(:end_jid, "")
+    update(status: :closed)
+  end
   private
 
-  def add_jobs
-    new_start_jid = StatusHandlerJob.set(wait_until: lot_start_time).perform_later(id, "in_process").provider_job_id
-    new_end_jid = StatusHandlerJob.set(wait_until: lot_end_time).perform_later(id, "closed").provider_job_id
-    update_column(:start_jid, new_start_jid)
-    update_column(:end_jid, new_end_jid)
-  end
-
-  def recreate_jobs
-    add_jobs
-  end
-
-  def send_mail_if_closed
-    if closed?
-      NotificationMailer.send_seller_lot_purchased(find_winner_bid).deliver_now
+    def add_jobs
+      new_start_jid = StatusHandlerJob.set(wait_until: lot_start_time).perform_later(id, "in_process").provider_job_id
+      new_end_jid = StatusHandlerJob.set(wait_until: lot_end_time).perform_later(id, "closed").provider_job_id
+      update_column(:start_jid, new_start_jid)
+      update_column(:end_jid, new_end_jid)
     end
-  end
+
+    def recreate_jobs
+      add_jobs
+    end
+
+    def send_mail_if_closed
+      if closed?
+        NotificationMailer.send_seller_lot_purchased(find_winner_bid).deliver_now
+      end
+    end
 end

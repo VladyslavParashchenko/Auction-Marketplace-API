@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -42,12 +43,6 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   describe "validations" do
-    before(:each) do
-      subject
-    end
-    subject do
-      user
-    end
     let(:user) { build(:user) }
     describe "age validation" do
       context "with ok user" do
@@ -56,7 +51,7 @@ RSpec.describe User, type: :model do
         end
       end
       context "with invalid birthday" do
-        let(:user) { build(:young_user) }
+        let(:user) { build(:client, birthday: 12.years.ago) }
         it "is invalid" do
           user.valid?
           expect(user.errors[:birthday].empty?).to be_falsey

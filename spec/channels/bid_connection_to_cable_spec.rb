@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "action_cable/testing/rspec"
 require "action_cable/testing/rspec/features"

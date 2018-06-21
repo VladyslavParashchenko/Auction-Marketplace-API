@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatusHandlerJob < ApplicationJob
   queue_as :default
 
@@ -7,4 +9,3 @@ class StatusHandlerJob < ApplicationJob
     end
   end
 end
-

@@ -1,54 +1,26 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "spec_helper"
-RSpec.describe "User account CRUD", :type => :request do
-  let(:user) {
-    {
-        first_name:            "Ivan",
-        last_name:             "Ivanov",
-        email:                 "user451@gmail.com",
-        password:              "pass1234",
-        password_confirmation: "pass1234",
-        phone:                 "1234567890",
-        birthday:               50.years.ago,
-        allow_password_change: true
-    }
-  }
-  describe "CREATE - POST request" do
-    subject {
-      post "/auth", params: user
-      response
-    }
+RSpec.describe "Registration test", type: :request do
+  let(:user) { attributes_for(:client) }
+  describe "POST create new user" do
+    subject { post "/auth", params: user }
     describe "try POST request register " do
       it "return success status" do
-        response_body = json_parse(subject.body)
-        expect(response_body["status"] == "success").to be_truthy
+        subject
+        expect(json_parse(response.body)["data"]["email"]).to eq(user[:email])
       end
     end
     describe "check insertion in the database" do
-      it "find user that we insert in DB" do
-        expect{
-          subject
-        }.to change(User, :count).by 1
+      it "should change count of users in DB" do
+        expect { subject }.to change(User, :count).by 1
       end
-      end
+    end
     describe "check email confirmation was sent" do
       it "true if email confirmation was sent" do
         expect { subject }.to change(Devise.mailer.deliveries, :count).by(1)
       end
     end
   end
-  describe "DELETE - delete user" do
-    subject {
-      delete "/auth", params: {email: user[:email], password: user[:password] }, headers: @controller.current_user.create_new_auth_token
-    }
-    describe "try delete user " do
-      it "return true if user deleted" do
-        post "/auth", params: user
-        subject
-        response_body = json_parse(response.body)
-        expect(response_body["status"] == "success").to be_truthy
-      end
-    end
-  end
 end
-

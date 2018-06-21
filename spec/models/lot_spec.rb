@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: lots
@@ -58,12 +60,12 @@ RSpec.describe Lot, type: :model do
     end
   end
   describe "action jobs test " do
-    let(:lot) {create(:lot, user: create(:client))}
+    let(:lot) { create(:lot, user: create(:client)) }
     describe "create new lot" do
-      subject {lot}
+      subject { lot }
       it "2 jobs will be created" do
         ActiveJob::Base.queue_adapter = :sidekiq
-        expect {subject}.to change {Sidekiq::ScheduledSet.new.size}.by(2)
+        expect { subject }.to change { Sidekiq::ScheduledSet.new.size }.by(2)
       end
     end
     describe "changing lot" do
@@ -71,7 +73,7 @@ RSpec.describe Lot, type: :model do
         lot
       end
       describe "update lot" do
-        subject {lot.update(lot_start_time: Time.now + 3.days)}
+        subject { lot.update(lot_start_time: Time.now + 3.days) }
         it "should change jid " do
           lot_old_jid = lot.start_jid
           subject
@@ -86,7 +88,7 @@ RSpec.describe Lot, type: :model do
       @bids = create_list(:bid, 5, lot: @lot)
       @lot.update_column(:status, :closed)
     end
-    let(:orders) {create(:order, bid: @bids.last)}
+    let(:orders) { create(:order, bid: @bids.last) }
     describe "testing lot helpers" do
       it "should find lot winner" do
         orders
@@ -95,6 +97,15 @@ RSpec.describe Lot, type: :model do
       it "should find lot winner" do
         expect(@lot.find_winner_bid.id).to eq(@bids.last.id)
       end
+    end
+  end
+  describe "test closing lot if set estimated_price" do
+    let(:lot) { create(:lot) }
+    subject do
+      create(:bid, proposed_price: lot.estimated_price, lot: lot)
+    end
+    it "should close lot" do
+      expect { subject }.to change { lot.status }.from("pending").to("closed")
     end
   end
 end

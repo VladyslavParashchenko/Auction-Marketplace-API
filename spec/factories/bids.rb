@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bids
@@ -22,7 +24,7 @@
 
 FactoryBot.define do
   factory :bid, class: Bid do
-    proposed_price { self.lot.current_price.to_f + Faker::Number.decimal(4,2).to_f }
+    proposed_price { self.lot.current_price.to_f + Faker::Number.decimal(4, 2).to_f }
     association :lot, factory: :lot
     association :user, factory: :client
   end

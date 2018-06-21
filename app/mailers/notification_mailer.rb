@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotificationMailer < ApplicationMailer
   def send_seller_lot_purchased(bid)
     @user = bid.lot.user

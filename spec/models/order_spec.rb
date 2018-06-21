@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: orders
@@ -26,7 +28,7 @@ RSpec.describe Order, type: :model do
     @lot = create(:lot)
   end
   describe "validations" do
-    let(:order) {build(:order, lot: @lot)}
+    let(:order) { build(:order, lot: @lot) }
     describe "order validation" do
       context "with not closed lot" do
         it "should return bid status validation error" do

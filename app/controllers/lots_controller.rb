@@ -1,16 +1,15 @@
 # frozen_string_literal: true
-class LotsController < ApplicationController
 
+class LotsController < ApplicationController
   def index
     lots = Lot.where(status: :in_process)
     render_collection(lots)
   end
 
   def my_lots
-    user_id = User.find(current_user.id)
-    lots = Lot.filter_my_lot(params[:filter], user_id)
+    user = User.find(current_user.id)
+    lots = Lot.filter_my_lot(params[:filter], user)
     render_collection(lots)
-
   end
 
   def create
@@ -38,10 +37,8 @@ class LotsController < ApplicationController
 
   private
 
-  def lot_params
-    params.permit(:id, :title, :current_price, :estimated_price,
-                  :lot_start_time, :lot_end_time, :status, :image, :description)
-  end
+    def lot_params
+      params.permit(:id, :title, :current_price, :estimated_price,
+                    :lot_start_time, :lot_end_time, :status, :image, :description)
+    end
 end
-
-
