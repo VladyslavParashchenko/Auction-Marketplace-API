@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "sequence"
 module Json_Helper
   def render_collection(resources)

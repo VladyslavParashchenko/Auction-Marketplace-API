@@ -26,11 +26,11 @@ class Bid < ApplicationRecord
   belongs_to :user
   has_one :order
   belongs_to :lot
-  validates :proposed_price, presence: true, numericality: {greater_than: 0}
+  validates :proposed_price, presence: true, numericality: { greater_than: 0 }
   validate :validate_proposed_price
   after_create :broadcast_new_bid
   after_create :change_current_price
-
+  after_create :check_is_price_greater_than_estimated
   def broadcast_new_bid
     ActionCable.server.broadcast("lot##{lot_id}", BidActiveCableSerializer.new(self).as_json)
   end
@@ -43,5 +43,11 @@ class Bid < ApplicationRecord
   end
   def change_current_price
     lot.update_price(proposed_price)
+  end
+
+  def check_is_price_greater_than_estimated
+    if proposed_price >= lot.estimated_price
+      lot.close_lot
+    end
   end
 end

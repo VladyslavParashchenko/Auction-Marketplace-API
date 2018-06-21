@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -37,7 +38,6 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
-
 FactoryBot.define do
   factory :user, class: User do
     first_name { Faker::Name.first_name }
@@ -50,12 +50,6 @@ FactoryBot.define do
     end
     email { Faker::Internet.email }
   end
-  factory :young_user, class: User do
-    first_name { Faker::Name.first_name }
-    last_name { Faker::Name.last_name }
-    phone { Faker::PhoneNumber.phone_number }
-    birthday { Faker::Date.birthday 8, 20 }
-  end
   factory :client, class: User do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
@@ -64,6 +58,6 @@ FactoryBot.define do
     password { "12345678" }
     password_confirmation { "12345678" }
     email { Faker::Internet.email }
-    confirmed_at {Time.now}
+    confirmed_at { Time.now }
   end
 end

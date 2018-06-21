@@ -14,7 +14,7 @@ RSpec.describe BidsController, type: :request do
       subject do
         post "/lots/#{@lot.id}/bids/", params: bid, headers: @user.create_new_auth_token
       end
-      let(:bid) {attributes_for(:bid, lot: @lot, proposed_price: @lot.current_price - 100)}
+      let(:bid) { attributes_for(:bid, lot: @lot, proposed_price: @lot.current_price - 100) }
       it "should return error message" do
         subject
         data = json_parse(response.body)
@@ -25,7 +25,7 @@ RSpec.describe BidsController, type: :request do
       subject do
         post "/lots/#{@lot.id}/bids/", params: bid, headers: @user.create_new_auth_token
       end
-      let(:bid) {attributes_for(:bid, lot: @lot, proposed_price: (@lot.current_price + 100))}
+      let(:bid) { attributes_for(:bid, lot: @lot, proposed_price: (@lot.current_price + 100)) }
       it "should create new lot" do
         expect { subject }.to change { Bid.count }.by(1)
       end
@@ -34,7 +34,7 @@ RSpec.describe BidsController, type: :request do
       subject do
         post "/lots/#{@lot.id}/bids/", params: bid, headers: @user.create_new_auth_token
       end
-      let(:bid) {attributes_for(:bid, lot: @lot, proposed_price: (@lot.current_price + 100))}
+      let(:bid) { attributes_for(:bid, lot: @lot, proposed_price: (@lot.current_price + 100)) }
       it "should lot current_price_change" do
         expect { subject }.to change { Lot.find(@lot.id).current_price }.from(@lot.current_price).to(bid[:proposed_price])
       end

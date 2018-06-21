@@ -10,7 +10,7 @@ RSpec.describe OrderController, type: :request do
   end
   describe "POST order#create" do
     describe "try create new order for lot" do
-      let(:order) {attributes_for(:order, bid: @bid)}
+      let(:order) { attributes_for(:order, bid: @bid) }
       subject do
         post "/lots/#{@lot.id}/order/", params: order, headers: @lot.user.create_new_auth_token
       end
@@ -29,15 +29,15 @@ RSpec.describe OrderController, type: :request do
       put "/lots/#{@lot.id}/order/#{@order.id}", params: order_status_attr, headers: @lot.user.create_new_auth_token
     end
     describe "try change status to sent" do
-      let(:order_status_attr) {{status: "sent"}}
+      let(:order_status_attr) { { status: "sent" } }
       it "should change status" do
-        expect{ subject }.to change{Order.find(@order.id).status}.from("pending").to("sent")
+        expect { subject }.to change { Order.find(@order.id).status }.from("pending").to("sent")
       end
     end
     describe "try change status to sent" do
-      let(:order_status_attr) {{status: "delivered"}}
+      let(:order_status_attr) { { status: "delivered" } }
       it "should change status" do
-        expect{ subject }.to change{Order.find(@order.id).status}.from("pending").to("delivered")
+        expect { subject }.to change { Order.find(@order.id).status }.from("pending").to("delivered")
       end
     end
   end

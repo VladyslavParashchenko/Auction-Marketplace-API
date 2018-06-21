@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: orders
@@ -24,7 +26,7 @@ FactoryBot.define do
   factory :order, class: Order do
     arrival_location { Faker::Address.full_address }
     arrival_type :delivery_company
-    delivery_company {Faker::Company.name}
+    delivery_company { Faker::Company.name }
     association :bid, factory: :bid
   end
 end
