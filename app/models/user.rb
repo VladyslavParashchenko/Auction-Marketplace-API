@@ -56,4 +56,10 @@ class User < ApplicationRecord
       errors.add :birthday, "age must be greater than 21"
     end
   end
+  def self.current
+    Thread.current[:user]
+  end
+  def self.current=(user)
+    Thread.current[:user] = user
+  end
 end

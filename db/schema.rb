@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_18_112006) do
+ActiveRecord::Schema.define(version: 2018_06_20_095742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,10 @@ ActiveRecord::Schema.define(version: 2018_06_18_112006) do
     t.bigint "bid_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "arrival_location"
+    t.integer "arrival_type"
+    t.integer "status", default: 0
+    t.string "delivery_company"
     t.index ["bid_id"], name: "index_orders_on_bid_id"
   end
 

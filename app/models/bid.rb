@@ -28,17 +28,20 @@ class Bid < ApplicationRecord
   belongs_to :lot
   validates :proposed_price, presence: true, numericality: {greater_than: 0}
   validate :validate_proposed_price
-  # validate :validate_lot_status
-  def validate_lot_status
-    puts lot.status
-    if lot.status != "in_process"
-      errors.add :lot_status, "you can not bid on this lot now"
-    end
+  after_create :broadcast_new_bid
+  after_create :change_current_price
+
+  def broadcast_new_bid
+    ActionCable.server.broadcast("lot##{lot_id}", BidActiveCableSerializer.new(self).as_json)
   end
+
   def validate_proposed_price
     current_price = lot.current_price
     if current_price >= proposed_price
       errors.add :proposed_price, "proposed price must be higher than the previous one"
     end
+  end
+  def change_current_price
+    lot.update_price(proposed_price)
   end
 end
