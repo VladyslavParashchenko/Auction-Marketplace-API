@@ -30,7 +30,7 @@ class Order < ApplicationRecord
   validates :arrival_location, presence: true
   validates :arrival_type, presence: true
   validate :validate_bid_status
-  after_save :send_notification_to_seller
+  after_update :send_notification_to_seller, if: :saved_change_to_status?
 
   private
 
@@ -42,9 +42,9 @@ class Order < ApplicationRecord
 
   def send_notification_to_seller
     if sent?
-      NotificationMailer.send_customer_lot_sent(self).deliver_later
+      NotificationMailer.send_customer_lot_sent(self).deliver_now
     elsif delivered?
-      NotificationMailer.send_seller_order_create(bid, self).deliver_later
+      NotificationMailer.send_seller_order_create(self).deliver_now
     end
   end
 end

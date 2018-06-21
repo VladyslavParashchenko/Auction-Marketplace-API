@@ -29,18 +29,14 @@
 class LotSerializer < ActiveModel::Serializer
   attributes :id, :title, :current_price, :estimated_price,
              :lot_start_time, :lot_end_time, :status, :image, :description
-  attribute :lot_order, if: :is_lot_status_closed?
-  attribute :is_current_user_lot?
+  attribute :lot_order
   has_one :user
-  has_many :bids, sequence: Helpers::Sequence.new if def is_current_user_lot?
-    current_user.id == object.user_id
-  end
-
-  def is_lot_status_closed?
-    Lot.find(object.id).closed?
-  end
+  has_many :bids, sequence: Helpers::Sequence.new
 
   def lot_order
-    OrderSerializer.new(Lot.find(object.id).find_winner_bid.order).as_json
+    order = Lot.find(object.id).find_winner_bid&.order
+    unless order.nil?
+      OrderSerializer.new(order).as_json
+    end
   end
 end

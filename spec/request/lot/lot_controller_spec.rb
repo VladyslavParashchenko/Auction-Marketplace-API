@@ -39,7 +39,7 @@ RSpec.describe LotsController, type: :request do
       before(:each) do
         @lot_for_order = @lot_arr.order("id").last
         @lot_for_order.update_column(:status, :closed)
-        @order = create(:order, bid: @lot_for_order.bids.order("proposed_price").last)
+        @order = create(:order, bid: @lot_for_order.find_winner_bid)
       end
       subject do
         get "/lots/#{@lot_for_order.id}/", headers: @user.create_new_auth_token

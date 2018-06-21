@@ -80,7 +80,7 @@ RSpec.describe Lot, type: :model do
       end
     end
   end
-  describe "action jobs test " do
+  describe "lot herlper test " do
     before(:each) do
       @lot = create(:lot)
       @bids = create_list(:bid, 5, lot: @lot)

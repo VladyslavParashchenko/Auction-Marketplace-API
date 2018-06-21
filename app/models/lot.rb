@@ -31,7 +31,7 @@ require "carrierwave/orm/activerecord"
 class Lot < ApplicationRecord
   belongs_to :user
   has_many :bids, dependent: :destroy
-  has_one :order, through: :bids
+  has_one :lot, through: :bid
   enum status: {pending: 0, in_process: 1, closed: 2}
   validates :title, presence: true
   validates :current_price, presence: true, numericality: {greater_than: 0}
@@ -41,9 +41,7 @@ class Lot < ApplicationRecord
   validate :is_status_pending, on: :create
   after_create :add_jobs
   after_update :recreate_jobs
-  after_update :send_mail_if_closed, if: :saved_change_to_lot_end_time?
-  after_update :send_status, if: :saved_change_to_status?
-
+  after_update :send_mail_if_closed, if: :saved_change_to_status?
   def validate_start_time
     if lot_start_time < Time.now
       errors.add :lot_start_time, "start time cannot be less than current time"
@@ -86,6 +84,10 @@ class Lot < ApplicationRecord
 
   def find_winner_bid
     bids.order("proposed_price").last
+    end
+
+  def find_winner_order
+    bids.order("proposed_price").last.order
   end
 
   private
@@ -103,7 +105,7 @@ class Lot < ApplicationRecord
 
   def send_mail_if_closed
     if closed?
-      NotificationMailer.send_seller_lot_purchased(find_winner_bid).deliver_later
+      NotificationMailer.send_seller_lot_purchased(find_winner_bid).deliver_now
     end
   end
 end

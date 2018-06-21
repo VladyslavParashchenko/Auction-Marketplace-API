@@ -1,14 +1,14 @@
 class NotificationMailer < ApplicationMailer
   def send_seller_lot_purchased(bid)
     @user = bid.lot.user
-    @lot  = bid.lot
+    @lot = bid.lot
     mail(to: @user.email, subject: "Your lot #{@lot.title} was purchased")
   end
 
   def send_seller_order_create(order)
     @bid = order.bid
     @user = @bid.lot.user
-    @lot  = @bid.lot
+    @lot = @bid.lot
     @order = order
     mail(to: @user.email, subject: "Customer create order for your lot #{@lot.title}")
   end

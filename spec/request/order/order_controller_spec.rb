@@ -6,15 +6,15 @@ RSpec.describe OrderController, type: :request do
   before(:each) do
     @lot = create(:lot)
     @bid = create(:bid, lot: @lot)
-    @lot.update_column(:status, :closed)
+    @lot.update(status: :closed)
   end
   describe "POST order#create" do
-    describe "try create new bid with a lower price" do
+    describe "try create new order for lot" do
       let(:order) {attributes_for(:order, bid: @bid)}
       subject do
         post "/lots/#{@lot.id}/order/", params: order, headers: @lot.user.create_new_auth_token
       end
-      it "should return error message" do
+      it "should return order for bid" do
         subject
         data = json_parse(response.body)
         expect(data["bid_id"]).to eq(@bid.id)
@@ -31,17 +31,13 @@ RSpec.describe OrderController, type: :request do
     describe "try change status to sent" do
       let(:order_status_attr) {{status: "sent"}}
       it "should change status" do
-        subject
-        data = json_parse(response.body)
-        expect(data["status"]).to eq(order_status_attr[:status])
+        expect{ subject }.to change{Order.find(@order.id).status}.from("pending").to("sent")
       end
     end
     describe "try change status to sent" do
       let(:order_status_attr) {{status: "delivered"}}
       it "should change status" do
-        subject
-        data = json_parse(response.body)
-        expect(data["status"]).to eq(order_status_attr[:status])
+        expect{ subject }.to change{Order.find(@order.id).status}.from("pending").to("delivered")
       end
     end
   end

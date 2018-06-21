@@ -21,11 +21,7 @@
 #
 
 class OrderSerializer < ActiveModel::Serializer
-  attributes :id, :status, :arrival_location, :arrival_type, :bid_id, :delivery_company
-  attribute :customer_id
-  attribute :seller_id
-
-
+  attributes :id, :status, :arrival_location, :arrival_type, :bid_id, :delivery_company, :customer_id, :seller_id
   def customer_id
     object.bid.user.id
   end

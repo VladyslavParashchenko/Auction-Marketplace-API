@@ -24,11 +24,10 @@ class BidActiveCableSerializer < ActiveModel::Serializer
   attributes :proposed_price, :created_at
   attribute :user do
     number = Bid.count
-    if @instance_options[:current_user] == object.user_id
-      username = "You"
+    if User.current&.id == object.user_id
+      "You"
     else
-      username = "Customer #{number}"
+      "Customer #{number}"
     end
-    username
   end
 end
