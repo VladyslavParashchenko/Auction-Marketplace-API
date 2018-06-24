@@ -43,7 +43,7 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   describe "validations" do
-    let(:user) { build(:user) }
+    let(:user) { build(:client) }
     describe "age validation" do
       context "with ok user" do
         it "is valid" do

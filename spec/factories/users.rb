@@ -39,17 +39,6 @@
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
 FactoryBot.define do
-  factory :user, class: User do
-    first_name { Faker::Name.first_name }
-    last_name { Faker::Name.last_name }
-    phone { Faker::PhoneNumber.phone_number }
-    birthday { Faker::Date.birthday 21, 100 }
-    trait :password do
-      password { "12345678" }
-      password_confirmation { "12345678" }
-    end
-    email { Faker::Internet.email }
-  end
   factory :client, class: User do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }

@@ -60,3 +60,4 @@ gem "active_model_serializers", "~> 0.10.0"
 gem "kaminari"
 gem "dotenv-rails", groups: [:development, :test]
 gem "sidekiq"
+gem "swagger-docs"
