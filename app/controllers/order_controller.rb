@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require "api/order_controller"
 class OrderController < ApplicationController
+  include OrderDocs
+
   def create
     order = Order.create(order_params(Lot.find(params[:lot_id])))
     render_item(order)

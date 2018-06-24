@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require "api/lots_controller"
 class LotsController < ApplicationController
+  include LotDocs
+
   def index
     lots = Lot.where(status: :in_process)
     render_collection(lots)
@@ -38,7 +41,7 @@ class LotsController < ApplicationController
   private
 
     def lot_params
-      params.permit(:id, :title, :current_price, :estimated_price,
+      params.permit(:title, :current_price, :estimated_price,
                     :lot_start_time, :lot_end_time, :status, :image, :description)
     end
 end

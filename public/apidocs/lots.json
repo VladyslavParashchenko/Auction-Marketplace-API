@@ -1,0 +1,444 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "http://localhost:3000/apidocs",
+  "resourcePath": "lots",
+  "apis": [
+    {
+      "path": "/lots/my.json",
+      "operations": [
+        {
+          "summary": "Select lot items by some filter",
+          "parameters": [
+            {
+              "paramType": "query",
+              "name": "filter",
+              "type": "string",
+              "description": "Filter of my_lots",
+              "required": true
+            },
+            {
+              "paramType": "query",
+              "name": "page",
+              "type": "integer",
+              "description": "Page number",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "per",
+              "type": "integer",
+              "description": "Count of items on page",
+              "required": false
+            },
+            {
+              "paramType": "header",
+              "name": "uid",
+              "type": "string",
+              "description": "uid",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "access-token",
+              "type": "string",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "nickname": "Lots#my_lots",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/lots.json",
+      "operations": [
+        {
+          "summary": "Select lot items",
+          "parameters": [
+            {
+              "paramType": "query",
+              "name": "page",
+              "type": "integer",
+              "description": "Page number",
+              "required": false
+            },
+            {
+              "paramType": "query",
+              "name": "per",
+              "type": "integer",
+              "description": "Count of items on page",
+              "required": false
+            },
+            {
+              "paramType": "header",
+              "name": "uid",
+              "type": "string",
+              "description": "uid",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "access-token",
+              "type": "string",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "notes": "All selected lot has status in_process",
+          "nickname": "Lots#index",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/lots.json",
+      "operations": [
+        {
+          "summary": "Create new lot",
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "title",
+              "type": "string",
+              "description": "Lot title",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "description",
+              "type": "string",
+              "description": "Lot description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "image",
+              "type": "string",
+              "description": "Lot image",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "current_price",
+              "type": "float",
+              "description": "Lot current_price",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "estimated_price",
+              "type": "float",
+              "description": "Lot estimated_price",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "lot_start_time",
+              "type": "date",
+              "description": "Lot start_time",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "lot_end_time",
+              "type": "date",
+              "description": "Lot end_time",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "uid",
+              "type": "string",
+              "description": "uid",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "access-token",
+              "type": "string",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Success"
+            },
+            {
+              "code": 400,
+              "responseModel": null,
+              "message": "Bad Request"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "nickname": "Lots#create",
+          "method": "post"
+        }
+      ]
+    },
+    {
+      "path": "/lots/{id}.json",
+      "operations": [
+        {
+          "summary": "Get lot",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Lot id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "uid",
+              "type": "string",
+              "description": "uid",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "access-token",
+              "type": "string",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "nickname": "Lots#show",
+          "method": "get"
+        }
+      ]
+    },
+    {
+      "path": "/lots/{id}.json",
+      "operations": [
+        {
+          "summary": "Update lot",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Lot id",
+              "required": true
+            },
+            {
+              "paramType": "form",
+              "name": "title",
+              "type": "string",
+              "description": "Lot title",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "description",
+              "type": "string",
+              "description": "Lot description",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "image",
+              "type": "string",
+              "description": "Lot image",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "current_price",
+              "type": "float",
+              "description": "Lot current_price",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "estimated_price",
+              "type": "float",
+              "description": "Lot estimated_price",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "lot_start_time",
+              "type": "date",
+              "description": "Lot start_time",
+              "required": false
+            },
+            {
+              "paramType": "form",
+              "name": "lot_end_time",
+              "type": "date",
+              "description": "Lot end_time",
+              "required": false
+            },
+            {
+              "paramType": "header",
+              "name": "uid",
+              "type": "string",
+              "description": "uid",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "access-token",
+              "type": "string",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Success"
+            },
+            {
+              "code": 400,
+              "responseModel": null,
+              "message": "Bad Request"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "nickname": "Lots#update",
+          "method": "patch"
+        }
+      ]
+    },
+    {
+      "path": "/lots/{id}.json",
+      "operations": [
+        {
+          "summary": "Create new lot",
+          "parameters": [
+            {
+              "paramType": "path",
+              "name": "id",
+              "type": "integer",
+              "description": "Lot id",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "uid",
+              "type": "string",
+              "description": "uid",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "access-token",
+              "type": "string",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Success"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "nickname": "Lots#destroy",
+          "method": "delete"
+        }
+      ]
+    }
+  ],
+  "authorizations": null
+}

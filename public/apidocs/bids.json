@@ -1,0 +1,66 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "http://localhost:3000/apidocs",
+  "resourcePath": "bids",
+  "apis": [
+    {
+      "path": "/lots/{lot_id}/bids.json",
+      "operations": [
+        {
+          "summary": "Create new bid for lot",
+          "parameters": [
+            {
+              "paramType": "form",
+              "name": "proposed_price",
+              "type": "float",
+              "description": "Proposed price",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "uid",
+              "type": "string",
+              "description": "uid",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "access-token",
+              "type": "string",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
+              "required": true
+            }
+          ],
+          "responseMessages": [
+            {
+              "code": 200,
+              "responseModel": null,
+              "message": "Success"
+            },
+            {
+              "code": 400,
+              "responseModel": null,
+              "message": "Bad Request"
+            },
+            {
+              "code": 401,
+              "responseModel": null,
+              "message": "Unauthorized"
+            }
+          ],
+          "nickname": "Bids#create",
+          "method": "post"
+        }
+      ]
+    }
+  ],
+  "authorizations": null
+}
