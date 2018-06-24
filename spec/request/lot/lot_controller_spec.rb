@@ -32,7 +32,7 @@ RSpec.describe LotsController, type: :request do
       it "should return list of bid" do
         subject
         data = json_parse(response.body)
-        expect(data["bids"].count == @lot_arr.last.bids.count).to be_truthy
+        expect(data["bids"].count).to eq(@lot_arr.last.bids.count)
       end
     end
     describe "show closed lot with order" do
@@ -73,6 +73,7 @@ RSpec.describe LotsController, type: :request do
         data = json_parse(response.body)
         data.each do |lot|
           expect(lot["user"]["id"]).to eq(@user.id)
+          expect(lot["is_user_lot"]).to eq(true)
         end
       end
     end
@@ -127,7 +128,7 @@ RSpec.describe LotsController, type: :request do
         it "should return error" do
           subject
           data = json_parse(response.body)
-          expect(data["errors"]["error"] == "You do not have rights to this action").to be_truthy
+          expect(data["errors"]["error"]).to eq("You do not have rights to this action")
         end
       end
     end
@@ -167,7 +168,7 @@ RSpec.describe LotsController, type: :request do
       it "should return error message" do
         subject
         data = json_parse(response.body)
-        expect(data["errors"]["error"] == "You do not have rights to this action").to be_truthy
+        expect(data["errors"]["error"]).to eq("You do not have rights to this action")
       end
     end
     describe "update lot without user" do

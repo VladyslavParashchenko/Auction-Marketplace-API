@@ -30,7 +30,7 @@
 
 class LotSerializer < ActiveModel::Serializer
   attributes :id, :title, :current_price, :estimated_price,
-             :lot_start_time, :lot_end_time, :status, :image, :description
+             :lot_start_time, :lot_end_time, :status, :image, :description, :is_user_lot
   attribute :lot_order
   has_one :user
   has_many :bids, sequence: Helpers::Sequence.new
@@ -40,5 +40,8 @@ class LotSerializer < ActiveModel::Serializer
     unless order.nil?
       OrderSerializer.new(order).as_json
     end
+  end
+  def is_user_lot
+    User.current.id == object.user.id
   end
 end
