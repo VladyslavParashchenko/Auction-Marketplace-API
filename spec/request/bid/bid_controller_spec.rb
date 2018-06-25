@@ -26,7 +26,7 @@ RSpec.describe BidsController, type: :request do
         post "/lots/#{@lot.id}/bids/", params: bid, headers: @user.create_new_auth_token
       end
       let(:bid) { attributes_for(:bid, lot: @lot, proposed_price: (@lot.current_price + 100)) }
-      it "should create new lot" do
+      it "should increase a count of bids" do
         expect { subject }.to change { Bid.count }.by(1)
       end
     end

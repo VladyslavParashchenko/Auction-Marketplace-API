@@ -15,6 +15,7 @@ module OrderDocs
     swagger_api :create do |api|
       summary "Create new order"
       OrderController.add_common_params(api)
+      ApplicationController.add_devise_auth_params(api)
       response :bad_request
       response :unauthorized
       response :ok, "Success"
@@ -22,6 +23,7 @@ module OrderDocs
 
     swagger_api :update do |api|
       summary "Update order status"
+      ApplicationController.add_devise_auth_params(api)
       param :query, :status, :string, :required, "New order status"
       response :unauthorized
       response :bad_request

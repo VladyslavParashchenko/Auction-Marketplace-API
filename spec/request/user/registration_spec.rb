@@ -7,8 +7,9 @@ RSpec.describe "Registration test", type: :request do
   describe "POST create new user" do
     subject { post "/auth", params: user }
     describe "try POST request register " do
-      it "return success status" do
+      it "should return user" do
         subject
+        expect(response.status).to eq(200)
         expect(json_parse(response.body)["data"]["email"]).to eq(user[:email])
       end
     end
@@ -18,7 +19,7 @@ RSpec.describe "Registration test", type: :request do
       end
     end
     describe "check email confirmation was sent" do
-      it "true if email confirmation was sent" do
+      it "should return true if email confirmation was sent" do
         expect { subject }.to change(Devise.mailer.deliveries, :count).by(1)
       end
     end

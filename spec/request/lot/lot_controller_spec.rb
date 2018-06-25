@@ -4,7 +4,7 @@ require "rails_helper"
 RSpec.describe LotsController, type: :request do
   before(:each) do
     @users = create_list(:client, 5)
-    @users.each { |user| list = create_list(:lot, 5, user: user) }
+    @users.each {|user| list = create_list(:lot, 5, user: user)}
     @user_from_db = User.last
     @user = User.first
     @lot_arr = Lot.all
@@ -16,7 +16,7 @@ RSpec.describe LotsController, type: :request do
   end
   describe "GET lots#index" do
     subject do
-      get "/lots", params: { page: 1, per: 10 }, headers: @user.create_new_auth_token
+      get "/lots", params: {page: 1, per: 10}, headers: @user.create_new_auth_token
     end
     it "should return list of lot" do
       subject
@@ -56,7 +56,7 @@ RSpec.describe LotsController, type: :request do
   describe "GET lots#my_lot" do
     context "select only lots that user create for sale" do
       subject do
-        get "/lots/my", params: { filter: :all, page: 1, per: 10 }, headers: @user.create_new_auth_token
+        get "/lots/my", params: {filter: :all, page: 1, per: 10}, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
@@ -66,7 +66,7 @@ RSpec.describe LotsController, type: :request do
     end
     context "select only lots that user create for sale" do
       subject do
-        get "/lots/my", params: { filter: :created, page: 1, per: 10 }, headers: @user.create_new_auth_token
+        get "/lots/my", params: {filter: :created, page: 1, per: 10}, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
@@ -79,7 +79,7 @@ RSpec.describe LotsController, type: :request do
     end
     context "select only lots that user won/try to win" do
       subject do
-        get "/lots/my", params: { filter: :participation, page: 1, per: 10 }, headers: @user.create_new_auth_token
+        get "/lots/my", params: {filter: :participation, page: 1, per: 10}, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
@@ -98,14 +98,18 @@ RSpec.describe LotsController, type: :request do
   end
   describe "POST lots#create" do
     let(:lot) do
-      FactoryBot.attributes_for(:lot)
+      attributes_for(:lot, :lot_image)
+    end
+    let(:headers) do
+      @user.create_new_auth_token.merge(content_type: "multipart/form-data;")
     end
     describe "try create new lot with image" do
       subject do
-        post "/lots", params: lot, headers: @user.create_new_auth_token
+        post "/lots", params: lot, headers: headers
       end
-      it "should create new lot" do
-        expect { subject }.to change { Lot.count }.by(1)
+      it "should change a count of lot" do
+        expect {subject}.to change {Lot.count}.by(1)
+        expect(json_parse(response.body)["image"]["url"]).to be
       end
     end
     include_examples "create operation without an authenticated user", "/lots/"
@@ -117,7 +121,7 @@ RSpec.describe LotsController, type: :request do
           delete "/lots/#{@user.lots.first.id}", headers: @user.create_new_auth_token
         end
         it "should delete lot" do
-          expect { subject }.to change { Lot.count }.by(-1)
+          expect {subject}.to change {Lot.count}.by(-1)
         end
       end
       describe "delete lot of another user" do
@@ -137,7 +141,7 @@ RSpec.describe LotsController, type: :request do
         subject do
           delete "/lots/#{@lot_arr.first.id}"
         end
-        it "should delete lot" do
+        it "should return error message" do
           subject
           data = json_parse(response.body)
           expect(data["errors"].include? "You need to sign in or sign up before continuing.").to be_truthy
@@ -147,12 +151,10 @@ RSpec.describe LotsController, type: :request do
 
   end
   describe "Update lots#update" do
-    let(:new_title) do
-      "Лот #1"
-    end
+    let(:new_title) {"Лот #1"}
     describe "update my lot" do
       subject do
-        put "/lots/#{@user.lots.first.id}", params: { title: new_title }, headers: @user.create_new_auth_token
+        put "/lots/#{@user.lots.first.id}", params: {title: new_title}, headers: @user.create_new_auth_token
       end
       it "should change title of lot" do
         subject
@@ -163,7 +165,7 @@ RSpec.describe LotsController, type: :request do
     describe "update not my lot" do
       subject do
         lot = FactoryBot.create(:lot, user: @user_from_db)
-        put "/lots/#{lot.id}", params: { title: new_title }, headers: @user.create_new_auth_token
+        put "/lots/#{lot.id}", params: {title: new_title}, headers: @user.create_new_auth_token
       end
       it "should return error message" do
         subject
@@ -174,7 +176,7 @@ RSpec.describe LotsController, type: :request do
     describe "update lot without user" do
       subject do
         lot = FactoryBot.create(:lot, user: @user_from_db)
-        put "/lots/#{lot.id}", params: { title: new_title }
+        put "/lots/#{lot.id}", params: {title: new_title}
       end
       it "should return error message" do
         subject
@@ -185,7 +187,7 @@ RSpec.describe LotsController, type: :request do
     describe "update lot with invalid data" do
       subject do
         lot = FactoryBot.create(:lot, user: @user_from_db)
-        put "/lots/#{lot.id}", params: { title: new_title, current_price: -2000 }, headers: @user.create_new_auth_token
+        put "/lots/#{lot.id}", params: {title: new_title, current_price: -2000}, headers: @user.create_new_auth_token
       end
       it "should return validate error" do
         subject

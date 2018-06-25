@@ -30,23 +30,23 @@
 
 FactoryBot.define do
   factory :lot, class: Lot do
-    title { "Лот #" + Faker::Number.number(3) }
-    current_price { Faker::Number.number(4).to_f }
-    estimated_price { Faker::Number.number(6).to_f }
-    lot_start_time { Faker::Time.between(2.days.from_now, 80.days.from_now) }
-    lot_end_time { Faker::Time.between(100.days.from_now, 180.days.from_now) }
+    title {"Лот #" + Faker::Number.number(3)}
+    current_price {Faker::Number.number(4).to_f}
+    estimated_price {Faker::Number.number(6).to_f}
+    lot_start_time {Faker::Time.between(2.days.from_now, 80.days.from_now)}
+    lot_end_time {Faker::Time.between(100.days.from_now, 180.days.from_now)}
     trait :not_valid_start_time do
-      lot_start_time { Faker::Time.between(2.days.ago, 80.days.ago) }
-      lot_end_time { Faker::Time.between(100.days.from_now, 180.days.from_now) }
+      lot_start_time {Faker::Time.between(2.days.ago, 80.days.ago)}
+      lot_end_time {Faker::Time.between(100.days.from_now, 180.days.from_now)}
     end
     trait :not_valid_end_time do
-      lot_start_time { Faker::Time.between(50.days.from_now, 80.days.from_now) }
-      lot_end_time { Faker::Time.between(2.days.from_now, 50.days.from_now) }
+      lot_start_time {Faker::Time.between(50.days.from_now, 80.days.from_now)}
+      lot_end_time {Faker::Time.between(2.days.from_now, 50.days.from_now)}
     end
     trait :lot_image do
-      image { File.new(File.join(::Rails.root.to_s, "spec/fixtures/files/", "test.jpg")) }
+      image {Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "test.jpg"), "image/jpeg")}
     end
-    status { :pending }
+    status {:pending}
     association :user, factory: :client
   end
 end
