@@ -36,11 +36,11 @@ RSpec.describe Order, type: :model do
           expect(order.errors[:bid_status].empty?).to be_falsey
         end
       end
-      context "with not closed lot" do
+      context "with closed lot" do
         before(:each) do
           @lot.update_column(:status, :closed)
         end
-        it "should return bid status validation error" do
+        it "should create new bid without errors" do
           order.valid?
           expect(order.errors[:bid_status].empty?).to be_truthy
         end

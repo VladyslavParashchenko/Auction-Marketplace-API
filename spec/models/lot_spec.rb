@@ -52,7 +52,7 @@ RSpec.describe Lot, type: :model do
         let(:lot) do
           build(:lot, :not_valid_end_time)
         end
-        it "return false if errors in lot_end_time" do
+        it "should return false if errors in lot_end_time" do
           lot.valid?
           expect(lot.errors[:lot_end_time].empty?).to be_falsey
         end
@@ -82,7 +82,7 @@ RSpec.describe Lot, type: :model do
       end
     end
   end
-  describe "lot herlper test " do
+  describe "lot helper test " do
     before(:each) do
       @lot = create(:lot)
       @bids = create_list(:bid, 5, lot: @lot)
@@ -94,7 +94,8 @@ RSpec.describe Lot, type: :model do
         orders
         expect(@lot.find_winner.id).to eq(@bids.last.user.id)
       end
-      it "should find lot winner" do
+      it "should find bid that won" do
+        orders
         expect(@lot.find_winner_bid.id).to eq(@bids.last.id)
       end
     end
