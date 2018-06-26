@@ -30,6 +30,7 @@
 
 require "carrierwave/orm/activerecord"
 class Lot < ApplicationRecord
+  mount_uploader :image, ImageUploader
   belongs_to :user
   has_many :bids, dependent: :destroy
   has_one :order, through: :bids
@@ -60,10 +61,8 @@ class Lot < ApplicationRecord
       errors.add :status, "Lot can be created only with status pending"
     end
   end
-  mount_uploader :image, ImageUploader
 
   def self.filter_my_lot(filter, user)
-    # puts user_id.id
     case filter
     when "all"
       Lot.left_outer_joins(:bids).where("bids.user_id": user.id).or(Lot.left_outer_joins(:bids).where("lots.user_id": user.id))

@@ -40,7 +40,6 @@
 #
 
 class User < ApplicationRecord
-  # Include default devise modules.
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable,
          :validatable, :confirmable
@@ -56,11 +55,5 @@ class User < ApplicationRecord
     if birthday.present? && birthday > 21.years.ago
       errors.add :birthday, "age must be greater than 21"
     end
-  end
-  def self.current
-    Thread.current[:user]
-  end
-  def self.current=(user)
-    Thread.current[:user] = user
   end
 end

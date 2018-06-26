@@ -23,7 +23,7 @@ module SessionsDocs
       end
     swagger_api :destroy do |api|
       summary "Destroy user session"
-      Users::SessionsController.add_params_for_sign_out(api)
+      ApplicationController.add_devise_auth_params(api)
       response :unauthorized
       response :ok, "Success"
     end

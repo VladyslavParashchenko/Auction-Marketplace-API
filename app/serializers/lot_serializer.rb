@@ -42,6 +42,6 @@ class LotSerializer < ActiveModel::Serializer
     end
   end
   def is_user_lot
-    User.current.id == object.user.id
+    current_user.id == object.user.id
   end
 end

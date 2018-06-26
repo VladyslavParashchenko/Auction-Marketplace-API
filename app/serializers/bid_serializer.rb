@@ -26,7 +26,7 @@ class BidSerializer < ActiveModel::Serializer
   attributes :proposed_price, :created_at
   attribute :user do
     number = @instance_options[:sequence].nil? ? "" : @instance_options[:sequence].number
-    if User.current.id == object.user_id
+    if current_user.id == object.user_id
       username = "You"
     else
       username = "Customer #{number}"

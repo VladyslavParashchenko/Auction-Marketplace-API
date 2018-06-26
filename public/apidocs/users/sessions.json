@@ -49,17 +49,24 @@
           "summary": "Destroy user session",
           "parameters": [
             {
-              "paramType": "form",
-              "name": "email",
+              "paramType": "header",
+              "name": "uid",
               "type": "string",
-              "description": "User email",
+              "description": "uid",
               "required": true
             },
             {
-              "paramType": "form",
-              "name": "password",
+              "paramType": "header",
+              "name": "access-token",
               "type": "string",
-              "description": "User password",
+              "description": "access-token",
+              "required": true
+            },
+            {
+              "paramType": "header",
+              "name": "client",
+              "type": "string",
+              "description": "client",
               "required": true
             }
           ],

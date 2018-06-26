@@ -5,7 +5,6 @@ require "helpers/render_helper"
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
   include Json_Helper
-  before_action :set_current_user
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found_handler
@@ -21,11 +20,6 @@ class ApplicationController < ActionController::API
       render_error({ error: "You do not have rights to this action" }, 400)
       true
     end
-
-    def set_current_user
-      User.current = current_user
-    end
-
 
     class << self
       Swagger::Docs::Generator.set_real_methods
