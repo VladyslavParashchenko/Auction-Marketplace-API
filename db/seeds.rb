@@ -20,7 +20,7 @@ Lot.all.each do |lot|
 end
 Lot.all.each do |lot|
   if lot.id.even?
-    bid = FactoryBot.create(:bid,proposed_price: lot.estimated_price+100,lot: lot)
-    FactoryBot.create(:order,bid: bid)
+    bid = FactoryBot.create(:bid, proposed_price: lot.estimated_price + 100, lot: lot)
+    FactoryBot.create(:order, bid: bid)
   end
 end

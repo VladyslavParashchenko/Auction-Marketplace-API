@@ -44,7 +44,7 @@ class User < ApplicationRecord
           :recoverable, :rememberable,
          :validatable, :confirmable
   include DeviseTokenAuth::Concerns::User
-  has_many :bids
+  has_many :bids, dependent: :destroy
   has_many :lots, dependent: :destroy
   validates :first_name, presence: true
   validates :last_name, presence: true

@@ -24,7 +24,7 @@
 
 class Bid < ApplicationRecord
   belongs_to :user
-  has_one :order
+  has_one :order, dependent: :destroy
   belongs_to :lot
   validates :proposed_price, presence: true, numericality: { greater_than: 0 }
   validate :validate_proposed_price
