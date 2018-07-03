@@ -4,10 +4,8 @@ require "rails_helper"
 
 RSpec.describe BidsController, type: :request do
   before(:each) do
-    @users = create_list(:client, 5)
-    @user = @users.first
+    @user = create(:client)
     @lot = create(:lot, user: @user)
-    @lot_id = @lot.id
   end
   describe "POST bids#create" do
     describe "try create new bid with a lower price" do

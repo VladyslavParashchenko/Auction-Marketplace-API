@@ -25,10 +25,10 @@
 class OrderSerializer < ActiveModel::Serializer
   attributes :id, :status, :arrival_location, :arrival_type, :bid_id, :delivery_company, :customer_id, :seller_id
   def customer_id
-    object.bid.user.id
+    object.bid.user_id
   end
 
   def seller_id
-    object.bid.lot.user.id
+    object.bid.lot.user_id
   end
 end

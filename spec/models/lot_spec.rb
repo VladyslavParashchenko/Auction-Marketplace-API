@@ -15,6 +15,7 @@
 #  start_jid       :string
 #  status          :integer          default("pending")
 #  title           :string
+#  winner_bid      :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  user_id         :bigint(8)
@@ -25,6 +26,7 @@
 #
 # Foreign Keys
 #
+#  fk_rails_6897db8a79  (winner_bid => bids.id)
 #  fk_rails_7afc1a8e38  (user_id => users.id)
 #
 
@@ -32,15 +34,7 @@ require "rails_helper"
 require "sidekiq/api"
 RSpec.describe Lot, type: :model do
   describe "validations" do
-    before(:each) do
-      subject
-    end
-    subject do
-      lot
-    end
-    let(:lot) do
-      build(:lot, :not_valid_start_time)
-    end
+    let(:lot) { build(:lot, :not_valid_start_time) }
     describe "lot validation" do
       context "with invalid start lot" do
         it "return false if errors in lot_start_time" do
@@ -49,9 +43,7 @@ RSpec.describe Lot, type: :model do
         end
       end
       context "with invalid end_time" do
-        let(:lot) do
-          build(:lot, :not_valid_end_time)
-        end
+        let(:lot) { build(:lot, :not_valid_end_time) }
         it "should return false if errors in lot_end_time" do
           lot.valid?
           expect(lot.errors[:lot_end_time].empty?).to be_falsey
@@ -69,9 +61,6 @@ RSpec.describe Lot, type: :model do
       end
     end
     describe "changing lot" do
-      before(:each) do
-        lot
-      end
       describe "update lot" do
         subject { lot.update(lot_start_time: Time.now + 3.days) }
         it "should change jid " do
@@ -84,19 +73,17 @@ RSpec.describe Lot, type: :model do
   end
   describe "lot helper test " do
     before(:each) do
-      @lot = create(:lot)
-      @bids = create_list(:bid, 5, lot: @lot)
-      @lot.update_column(:status, :closed)
+      @lot = create(:lot, :lot_with_bid)
+      @bids = @lot.bids
+      @lot.update(status: :closed)
     end
     let(:orders) { create(:order, bid: @bids.last) }
     describe "testing lot helpers" do
       it "should find lot winner" do
-        orders
-        expect(@lot.find_winner.id).to eq(@bids.last.user.id)
+        expect(@lot.get_winner_bid.user.id).to eq(@bids.last.user.id)
       end
       it "should find bid that won" do
-        orders
-        expect(@lot.find_winner_bid.id).to eq(@bids.last.id)
+        expect(@lot.get_winner_bid.id).to eq(@bids.last.id)
       end
     end
   end

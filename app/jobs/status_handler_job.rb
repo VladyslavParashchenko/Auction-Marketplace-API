@@ -4,8 +4,9 @@ class StatusHandlerJob < ApplicationJob
   queue_as :default
 
   def perform(lot_id, status)
-    if (self.jid == Lot.find(lot_id).start_jid) || (self.jid == Lot.find(lot_id).end_jid)
-      Lot.find(lot_id).update(status: status)
+    lot = Lot.find(lot_id)
+    if (self.jid == lot.start_jid) || (self.jid == lot.end_jid)
+      lot.update(status: status)
     end
   end
 end

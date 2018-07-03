@@ -13,8 +13,8 @@
 # a separate helper file that requires the additional dependencies and performs
 # the additional setup, and require it from the spec files that actually need
 # it.
-require "simplecov"
-SimpleCov.start
+# require "simplecov"
+# SimpleCov.start
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
@@ -96,10 +96,10 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
-  if ENV["RAILS_ENV"] == "test"
-    require "simplecov"
-    SimpleCov.start "rails"
-    puts "required simplecov"
-  end
+  # if ENV["RAILS_ENV"] == "test"
+  #   require "simplecov"
+  #   SimpleCov.start "rails"
+  #   puts "required simplecov"
+  # end
 
 end

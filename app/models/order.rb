@@ -37,7 +37,7 @@ class Order < ApplicationRecord
 
     def validate_bid_status
       unless bid.lot.closed?
-        errors.add :bid_status, "You can create order only for closed lot"
+        errors.add :lot_status, "You can create order only for closed lot"
       end
     end
 

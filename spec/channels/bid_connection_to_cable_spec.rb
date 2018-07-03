@@ -13,6 +13,6 @@ RSpec.describe ApplicationCable::Connection, type: :channel do
     expect(connection.current_user.id).to eq(@user.id)
   end
   it "rejects connection" do
-    expect { connect "/cable" }.to have_rejected_connection
+    expect { connect "/lots/#{@lot.id}/" }.to have_rejected_connection
   end
 end

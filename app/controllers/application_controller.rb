@@ -5,9 +5,11 @@ require "helpers/render_helper"
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
   include Json_Helper
+  include Pundit
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found_handler
+  rescue_from ActiveRecord::RecordNotFound, with: :permission_denied_answer
+  rescue_from Pundit::NotAuthorizedError, with: :permission_denied_answer
 
   protected
 
@@ -16,9 +18,8 @@ class ApplicationController < ActionController::API
       devise_parameter_sanitizer.permit(:account_update, keys: [:password, :password_confirmation, :current_password])
     end
 
-    def record_not_found_handler
+    def permission_denied_answer
       render_error({ error: "You do not have rights to this action" }, 400)
-      true
     end
 
     class << self
