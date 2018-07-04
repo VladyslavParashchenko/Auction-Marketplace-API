@@ -61,3 +61,4 @@ gem "kaminari"
 gem "dotenv-rails", groups: [:development, :test]
 gem "sidekiq"
 gem "swagger-docs"
+gem "pundit"

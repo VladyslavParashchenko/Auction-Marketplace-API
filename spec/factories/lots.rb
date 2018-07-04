@@ -15,6 +15,7 @@
 #  start_jid       :string
 #  status          :integer          default("pending")
 #  title           :string
+#  winner_bid      :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  user_id         :bigint(8)
@@ -25,6 +26,7 @@
 #
 # Foreign Keys
 #
+#  fk_rails_6897db8a79  (winner_bid => bids.id)
 #  fk_rails_7afc1a8e38  (user_id => users.id)
 #
 
@@ -45,6 +47,13 @@ FactoryBot.define do
     end
     trait :lot_image do
       image { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "test.jpg"), "image/jpeg") }
+    end
+
+    trait :lot_with_bid do
+      after(:create) do |lot|
+        Lot.find(lot.id).update_column(:status, :in_process)
+        create_list(:bid, 5, lot: lot)
+      end
     end
     status { :pending }
     association :user, factory: :client

@@ -10,8 +10,7 @@ class LotsController < ApplicationController
   end
 
   def my_lots
-    user = User.find(current_user.id)
-    lots = Lot.filter_my_lot(params[:filter], user)
+    lots = Lot.filter_my_lot(params[:filter], current_user)
     render_collection(lots)
   end
 
@@ -23,6 +22,7 @@ class LotsController < ApplicationController
 
   def show
     lot = Lot.find(params[:id])
+    authorize(lot)
     render_item(lot)
   end
 

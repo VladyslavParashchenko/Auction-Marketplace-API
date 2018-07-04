@@ -3,16 +3,11 @@
 require "rails_helper"
 RSpec.describe LotsController, type: :request do
   before(:each) do
-    @users = create_list(:client, 5)
-    @users.each { |user| list = create_list(:lot, 5, user: user) }
-    @user_from_db = User.last
-    @user = User.first
+    @users = create_list(:client, 2)
+    @users.each { |user| create_list(:lot, 5, :lot_with_bid, user: user) }
+    @user = @users.first
+    @second_user = @users.last
     @lot_arr = Lot.all
-    @lot_arr.each do |lot|
-      lot.update_column(:status, :in_process)
-      create_list(:bid, 10, user: @user_from_db, lot: lot)
-      create_list(:bid, 10, user: @user, lot: lot)
-    end
   end
   describe "GET lots#index" do
     subject do
@@ -26,6 +21,14 @@ RSpec.describe LotsController, type: :request do
   end
   describe "GET Lot#show" do
     describe "show not closed lot without order" do
+      let(:lot_for_test) { create(:lot) }
+      let(:random_user) { create(:client) }
+      subject do
+        get "/lots/#{lot_for_test.id}/", headers: random_user.create_new_auth_token
+      end
+      include_examples "return permission error"
+    end
+    describe "show foreign lot with pending status" do
       subject do
         get "/lots/#{@lot_arr.last.id}/", headers: @user.create_new_auth_token
       end
@@ -38,11 +41,11 @@ RSpec.describe LotsController, type: :request do
     describe "show closed lot with order" do
       before(:each) do
         @lot_for_order = @lot_arr.order("id").last
-        @lot_for_order.update_column(:status, :closed)
+        @lot_for_order.update(status: :closed)
         @order = create(:order, bid: @lot_for_order.find_winner_bid)
       end
       subject do
-        get "/lots/#{@lot_for_order.id}/", headers: @user.create_new_auth_token
+        get "/lots/#{@lot_for_order.id}/", headers: @lot_for_order.get_winner_bid.user.create_new_auth_token
       end
       it "should return list of bid" do
         subject
@@ -50,7 +53,6 @@ RSpec.describe LotsController, type: :request do
         expect(data["lot_order"]["id"]).to eq(@order.id)
       end
     end
-
   end
 
   describe "GET lots#my_lot" do
@@ -126,14 +128,10 @@ RSpec.describe LotsController, type: :request do
       end
       describe "delete lot of another user" do
         subject do
-          lot = FactoryBot.create(:lot, user: @user_from_db)
+          lot = create(:lot, user: @second_user)
           delete "/lots/#{lot.id}", headers: @user.create_new_auth_token
         end
-        it "should return error" do
-          subject
-          data = json_parse(response.body)
-          expect(data["errors"]["error"]).to eq("You do not have rights to this action")
-        end
+        include_examples "return permission error"
       end
     end
     context "Unauthorized  user" do
@@ -141,11 +139,7 @@ RSpec.describe LotsController, type: :request do
         subject do
           delete "/lots/#{@lot_arr.first.id}"
         end
-        it "should return error message" do
-          subject
-          data = json_parse(response.body)
-          expect(data["errors"].include? "You need to sign in or sign up before continuing.").to be_truthy
-        end
+        include_examples "session error"
       end
     end
 
@@ -164,29 +158,21 @@ RSpec.describe LotsController, type: :request do
     end
     describe "update not my lot" do
       subject do
-        lot = FactoryBot.create(:lot, user: @user_from_db)
+        lot = create(:lot, user: @second_user)
         put "/lots/#{lot.id}", params: { title: new_title }, headers: @user.create_new_auth_token
       end
-      it "should return error message" do
-        subject
-        data = json_parse(response.body)
-        expect(data["errors"]["error"]).to eq("You do not have rights to this action")
-      end
+      include_examples "return permission error"
     end
     describe "update lot without user" do
       subject do
-        lot = FactoryBot.create(:lot, user: @user_from_db)
+        lot = create(:lot, user: @second_user)
         put "/lots/#{lot.id}", params: { title: new_title }
       end
-      it "should return error message" do
-        subject
-        data = json_parse(response.body)
-        expect(data["errors"].include? "You need to sign in or sign up before continuing.").to be_truthy
-      end
+      include_examples "session error"
     end
     describe "update lot with invalid data" do
       subject do
-        lot = FactoryBot.create(:lot, user: @user_from_db)
+        lot = create(:lot, user: @second_user)
         put "/lots/#{lot.id}", params: { title: new_title, current_price: -2000 }, headers: @user.create_new_auth_token
       end
       it "should return validate error" do

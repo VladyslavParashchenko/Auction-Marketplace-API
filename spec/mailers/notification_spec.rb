@@ -27,7 +27,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
   describe "Order notify" do
     before(:each) do
-      @lot.update_column(:status, :closed)
+      @lot.update(status: :closed)
       @order = create(:order, bid: @lot.find_winner_bid)
     end
     describe "test mail sent to correct user and with correct subject" do
@@ -43,7 +43,7 @@ RSpec.describe NotificationMailer, type: :mailer do
       context "lot was sent to customer" do
         let(:mail) { NotificationMailer.send_customer_lot_sent(@order) }
         it "should send email to lot owner" do
-          expect(mail.to.first).to eq(@lot.find_winner.email)
+          expect(mail.to.first).to eq(@lot.get_winner_bid.user.email)
         end
         it "should send email with correct subject" do
           expect(mail.subject).to eq("Lot #{@lot.title} was sent to you")

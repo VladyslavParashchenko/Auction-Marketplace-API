@@ -15,6 +15,7 @@
 #  start_jid       :string
 #  status          :integer          default("pending")
 #  title           :string
+#  winner_bid      :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  user_id         :bigint(8)
@@ -25,6 +26,7 @@
 #
 # Foreign Keys
 #
+#  fk_rails_6897db8a79  (winner_bid => bids.id)
 #  fk_rails_7afc1a8e38  (user_id => users.id)
 #
 
@@ -44,6 +46,7 @@ class Lot < ApplicationRecord
   after_create :add_jobs
   after_update :recreate_jobs
   after_update :send_mail_if_closed, if: :saved_change_to_status?
+
   def validate_start_time
     if lot_start_time < Time.now
       errors.add :lot_start_time, "start time cannot be less than current time"
@@ -62,6 +65,13 @@ class Lot < ApplicationRecord
     end
   end
 
+  def find_winner_bid
+    bids.order("proposed_price").last
+  end
+
+  def get_winner_bid
+    Bid.find(winner_bid)
+  end
   def self.filter_my_lot(filter, user)
     case filter
     when "all"
@@ -77,29 +87,16 @@ class Lot < ApplicationRecord
     update(current_price: proposed_price)
   end
 
-  def find_winner
-    bids.order("proposed_price desc").first.user
-  end
-
-  def find_winner_bid
-    bids.order("proposed_price").last
-    end
-
-  def find_winner_order
-    bids.order("proposed_price").last.order
-  end
   def close_lot
-    update_column(:start_jid, "")
-    update_column(:end_jid, "")
-    update(status: :closed)
+    update(start_jid: "", end_jid: "", status: :closed)
   end
+
   private
 
     def add_jobs
       new_start_jid = StatusHandlerJob.set(wait_until: lot_start_time).perform_later(id, "in_process").provider_job_id
       new_end_jid = StatusHandlerJob.set(wait_until: lot_end_time).perform_later(id, "closed").provider_job_id
-      update_column(:start_jid, new_start_jid)
-      update_column(:end_jid, new_end_jid)
+      update_columns(start_jid: new_start_jid, end_jid: new_end_jid)
     end
 
     def recreate_jobs
@@ -109,6 +106,7 @@ class Lot < ApplicationRecord
     def send_mail_if_closed
       if closed?
         NotificationMailer.send_seller_lot_purchased(find_winner_bid).deliver_now
+        update(winner_bid: find_winner_bid.id)
       end
     end
 end

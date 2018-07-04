@@ -3,22 +3,24 @@
 require "api/order_controller"
 class OrderController < ApplicationController
   include OrderDocs
-
   def create
-    order = Order.create(order_params(Lot.find(params[:lot_id])))
+    order = Order.new(order_params)
+    authorize(order)
+    order.save
     render_item(order)
   end
 
   def update
-    order = Lot.find(params[:lot_id]).find_winner_order
+    order = Order.find(params[:id])
+    authorize(order)
     order.update(order_status)
     render_item(order)
   end
 
   private
 
-    def order_params(lot)
-      params.permit(:arrival_type, :arrival_location, :delivery_company).merge(bid_id: lot.find_winner_bid.id)
+    def order_params
+      params.permit(:arrival_type, :arrival_location, :delivery_company, :bid_id)
     end
 
     def order_status

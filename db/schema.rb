@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_20_095742) do
+ActiveRecord::Schema.define(version: 2018_06_27_140342) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2018_06_20_095742) do
     t.datetime "lot_end_time"
     t.string "start_jid"
     t.string "end_jid"
+    t.integer "winner_bid"
     t.index ["user_id"], name: "index_lots_on_user_id"
   end
 
@@ -87,6 +88,7 @@ ActiveRecord::Schema.define(version: 2018_06_20_095742) do
 
   add_foreign_key "bids", "lots"
   add_foreign_key "bids", "users"
+  add_foreign_key "lots", "bids", column: "winner_bid"
   add_foreign_key "lots", "users"
   add_foreign_key "orders", "bids"
 end

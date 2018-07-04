@@ -25,24 +25,25 @@
 require "rails_helper"
 RSpec.describe Order, type: :model do
   before(:each) do
-    @lot = create(:lot)
+    @lot = create(:lot, :lot_with_bid)
   end
   describe "validations" do
-    let(:order) { build(:order, lot: @lot) }
     describe "order validation" do
       context "with not closed lot" do
+        let(:order) { build(:order, bid: @lot.find_winner_bid) }
         it "should return bid status validation error" do
           order.valid?
-          expect(order.errors[:bid_status].empty?).to be_falsey
+          expect(order.errors[:lot_status].empty?).to be_falsey
         end
       end
       context "with closed lot" do
         before(:each) do
-          @lot.update_column(:status, :closed)
+          @lot.update(status: :closed)
         end
+        let(:order) { build(:order, bid: @lot.get_winner_bid) }
         it "should create new bid without errors" do
           order.valid?
-          expect(order.errors[:bid_status].empty?).to be_truthy
+          expect(order.errors[:lot_status].empty?).to be_truthy
         end
       end
     end
