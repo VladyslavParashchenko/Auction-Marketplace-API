@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 source "https://rubygems.org"
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) {|repo| "https://github.com/#{repo}.git" }
 
-ruby "2.5.1"
+ruby "2.3.3"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 5.2.0"
@@ -53,12 +53,12 @@ group :test do
   gem "action-cable-testing"
 end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
-gem "devise_token_auth"
-gem "carrierwave", "~> 1.0"
 gem "active_model_serializers", "~> 0.10.0"
+gem "carrierwave", "~> 1.0"
+gem "devise_token_auth"
+gem "dotenv-rails", groups: %i[development test]
 gem "kaminari"
-gem "dotenv-rails", groups: [:development, :test]
+gem "pundit"
 gem "sidekiq"
 gem "swagger-docs"
-gem "pundit"
+gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]

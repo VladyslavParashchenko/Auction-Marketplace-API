@@ -5,8 +5,6 @@ class StatusHandlerJob < ApplicationJob
 
   def perform(lot_id, status)
     lot = Lot.find(lot_id)
-    if (self.jid == lot.start_jid) || (self.jid == lot.end_jid)
-      lot.update(status: status)
-    end
+    lot.update(status: status) if (jid == lot.start_jid) || (jid == lot.end_jid)
   end
 end

@@ -13,23 +13,25 @@ class ApplicationController < ActionController::API
 
   protected
 
-    def configure_permitted_parameters
-      devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :phone, :birthday, :password, :password_confirmation, :allow_password_change])
-      devise_parameter_sanitizer.permit(:account_update, keys: [:password, :password_confirmation, :current_password])
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[first_name last_name phone birthday password
+    password_confirmation allow_password_change])
+    devise_parameter_sanitizer.permit(:account_update, keys: %i[password password_confirmation current_password])
+  end
+
+  def permission_denied_answer
+    render_error({error: "You do not have rights to this action"}, 400)
+  end
+
+  class << self
+    Swagger::Docs::Generator.set_real_methods
+
+    def add_devise_auth_params(api)
+      api.param :header, "uid", :string, :required, "uid"
+      api.param :header, "access-token", :string, :required, "access-token"
+      api.param :header, "client", :string, :required, "client"
     end
 
-    def permission_denied_answer
-      render_error({ error: "You do not have rights to this action" }, 400)
-    end
-
-    class << self
-      Swagger::Docs::Generator.set_real_methods
-
-      def add_devise_auth_params(api)
-        api.param :header, "uid", :string, :required, "uid"
-        api.param :header, "access-token", :string, :required, "access-token"
-        api.param :header, "client", :string, :required, "client"
-      end
-      private
-    end
+    private
+  end
 end

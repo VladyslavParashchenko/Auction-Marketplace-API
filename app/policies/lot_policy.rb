@@ -13,14 +13,14 @@ class LotPolicy < ApplicationPolicy
   end
 
   def show?
-    unless @lot.in_process?
+    if @lot.in_process?
+      true
+    else
       if @lot.pending?
         @user.id == @lot.user.id
       elsif @lot.closed?
         @user.id == @lot.user_id || @user.id == @lot.get_winner_bid.user_id
       end
-    else
-      true
     end
   end
 end

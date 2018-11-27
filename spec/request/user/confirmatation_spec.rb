@@ -7,9 +7,9 @@ RSpec.describe "Сonfirmation", type: :request do
   end
   subject do
     get "/auth/confirmation", params: {
-        config: "default",
-        confirmation_token: @user.confirmation_token,
-        redirect_url: "/"
+      config:             "default",
+      confirmation_token: @user.confirmation_token,
+      redirect_url:       "/"
     }
   end
   describe "GET /api/auth/confirmation" do

@@ -6,7 +6,7 @@ RSpec.describe "Session test", type: :request do
   let(:user) { create(:client, confirmed_at: Time.now) }
   describe "sign in" do
     let(:user) { create(:client) }
-    subject { post "/auth/sign_in", params: { email: user.email, password: user.password } }
+    subject { post "/auth/sign_in", params: {email: user.email, password: user.password} }
     context "try login with valid data" do
       it "should create new user session" do
         subject
@@ -16,7 +16,7 @@ RSpec.describe "Session test", type: :request do
       end
     end
     context "try login with not valid data" do
-      subject { post "/auth/sign_in", params: { email: Faker::Internet.email, password: "1224235225" } }
+      subject { post "/auth/sign_in", params: {email: Faker::Internet.email, password: "1224235225"} }
       it "should return status 401" do
         subject
         expect(response.status).to eq(401)

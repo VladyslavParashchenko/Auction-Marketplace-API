@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRelationToLot < ActiveRecord::Migration[5.2]
   def change
     add_column :lots, :winner_bid, :integer, index: true

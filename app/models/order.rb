@@ -26,8 +26,8 @@ class Order < ApplicationRecord
   belongs_to :bid
   has_one :lot, through: :bid
   has_one :user, through: :bid
-  enum status: { pending: 0, sent: 1, delivered: 2 }
-  enum arrival_type: { pickup: 0, delivery_company: 1 }
+  enum status: {pending: 0, sent: 1, delivered: 2}
+  enum arrival_type: {pickup: 0, delivery_company: 1}
   validates :arrival_location, presence: true
   validates :arrival_type, presence: true
   validate :validate_bid_status
@@ -35,17 +35,17 @@ class Order < ApplicationRecord
 
   private
 
-    def validate_bid_status
-      unless bid.lot.closed?
-        errors.add :lot_status, "You can create order only for closed lot"
-      end
+  def validate_bid_status
+    unless bid.lot.closed?
+      errors.add :lot_status, "You can create order only for closed lot"
     end
+  end
 
-    def send_notification_to_seller
-      if sent?
-        NotificationMailer.send_customer_lot_sent(self).deliver_now
-      elsif delivered?
-        NotificationMailer.send_seller_order_create(self).deliver_now
-      end
+  def send_notification_to_seller
+    if sent?
+      NotificationMailer.send_customer_lot_sent(self).deliver_now
+    elsif delivered?
+      NotificationMailer.send_seller_order_create(self).deliver_now
     end
+  end
 end

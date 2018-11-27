@@ -4,14 +4,14 @@ require "rails_helper"
 RSpec.describe LotsController, type: :request do
   before(:each) do
     @users = create_list(:client, 2)
-    @users.each { |user| create_list(:lot, 5, :lot_with_bid, user: user) }
+    @users.each {|user| create_list(:lot, 5, :lot_with_bid, user: user) }
     @user = @users.first
     @second_user = @users.last
     @lot_arr = Lot.all
   end
   describe "GET lots#index" do
     subject do
-      get "/lots", params: { page: 1, per: 10 }, headers: @user.create_new_auth_token
+      get "/lots", params: {page: 1, per: 10}, headers: @user.create_new_auth_token
     end
     it "should return list of lot" do
       subject
@@ -58,7 +58,7 @@ RSpec.describe LotsController, type: :request do
   describe "GET lots#my_lot" do
     context "select only lots that user create for sale" do
       subject do
-        get "/lots/my", params: { filter: :all, page: 1, per: 10 }, headers: @user.create_new_auth_token
+        get "/lots/my", params: {filter: :all, page: 1, per: 10}, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
@@ -68,7 +68,7 @@ RSpec.describe LotsController, type: :request do
     end
     context "select only lots that user create for sale" do
       subject do
-        get "/lots/my", params: { filter: :created, page: 1, per: 10 }, headers: @user.create_new_auth_token
+        get "/lots/my", params: {filter: :created, page: 1, per: 10}, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
@@ -81,7 +81,7 @@ RSpec.describe LotsController, type: :request do
     end
     context "select only lots that user won/try to win" do
       subject do
-        get "/lots/my", params: { filter: :participation, page: 1, per: 10 }, headers: @user.create_new_auth_token
+        get "/lots/my", params: {filter: :participation, page: 1, per: 10}, headers: @user.create_new_auth_token
       end
       it "should return list of lot" do
         subject
@@ -89,9 +89,7 @@ RSpec.describe LotsController, type: :request do
         data.each do |lot|
           is_user_lot = false
           lot["bids"].each do |bid|
-            if bid["user"] == "You"
-              is_user_lot = true
-            end
+            is_user_lot = true if bid["user"] == "You"
           end
           expect(is_user_lot).to be_truthy
         end
@@ -142,13 +140,12 @@ RSpec.describe LotsController, type: :request do
         include_examples "session error"
       end
     end
-
   end
   describe "Update lots#update" do
     let(:new_title) { "Лот #1" }
     describe "update my lot" do
       subject do
-        put "/lots/#{@user.lots.first.id}", params: { title: new_title }, headers: @user.create_new_auth_token
+        put "/lots/#{@user.lots.first.id}", params: {title: new_title}, headers: @user.create_new_auth_token
       end
       it "should change title of lot" do
         subject
@@ -159,21 +156,21 @@ RSpec.describe LotsController, type: :request do
     describe "update not my lot" do
       subject do
         lot = create(:lot, user: @second_user)
-        put "/lots/#{lot.id}", params: { title: new_title }, headers: @user.create_new_auth_token
+        put "/lots/#{lot.id}", params: {title: new_title}, headers: @user.create_new_auth_token
       end
       include_examples "return permission error"
     end
     describe "update lot without user" do
       subject do
         lot = create(:lot, user: @second_user)
-        put "/lots/#{lot.id}", params: { title: new_title }
+        put "/lots/#{lot.id}", params: {title: new_title}
       end
       include_examples "session error"
     end
     describe "update lot with invalid data" do
       subject do
         lot = create(:lot, user: @second_user)
-        put "/lots/#{lot.id}", params: { title: new_title, current_price: -2000 }, headers: @user.create_new_auth_token
+        put "/lots/#{lot.id}", params: {title: new_title, current_price: -2000}, headers: @user.create_new_auth_token
       end
       it "should return validate error" do
         subject

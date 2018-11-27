@@ -38,6 +38,7 @@ class LotSerializer < ActiveModel::Serializer
   def is_user_lot
     current_user.id == object.user.id
   end
+
   def lot_order
     unless object.winner_bid.nil?
       OrderSerializer.new(object.get_winner_bid.order).as_json

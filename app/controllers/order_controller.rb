@@ -19,11 +19,11 @@ class OrderController < ApplicationController
 
   private
 
-    def order_params
-      params.permit(:arrival_type, :arrival_location, :delivery_company, :bid_id)
-    end
+  def order_params
+    params.permit(:arrival_type, :arrival_location, :delivery_company, :bid_id)
+  end
 
-    def order_status
-      params.permit(:status)
-    end
+  def order_status
+    params.permit(:status)
+  end
 end

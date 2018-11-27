@@ -34,10 +34,10 @@ RSpec.describe BidsController, type: :request do
       end
       let(:bid) { attributes_for(:bid, lot: @lot, proposed_price: (@lot.current_price + 100)) }
       it "should lot current_price_change" do
-        expect { subject }.to change { Lot.find(@lot.id).current_price }.from(@lot.current_price).to(bid[:proposed_price])
+        expect { subject }.to change { Lot.find(@lot.id).current_price }
+                                  .from(@lot.current_price).to(bid[:proposed_price])
       end
     end
     include_examples "create operation without an authenticated user", "/lots/1/bids/"
   end
-
 end

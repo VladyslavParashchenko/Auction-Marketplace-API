@@ -72,6 +72,7 @@ module LotDocs
       api.param :form, :lot_start_time, :date, :required, "Lot start_time"
       api.param :form, :lot_end_time, :date, :required, "Lot end_time"
       end
+
     def self.add_common_params_for_update_lot(api)
       api.param :form, :title, :string, :optional, "Lot title"
       api.param :form, :description, :string, :optional, "Lot description"

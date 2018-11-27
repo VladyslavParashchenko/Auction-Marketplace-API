@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddColumnForLot < ActiveRecord::Migration[5.2]
   def change
     add_column :lots, :title, :string

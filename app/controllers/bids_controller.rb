@@ -13,9 +13,10 @@ class BidsController < ApplicationController
     bid = Bid.find(params[:id])
     render_item(bid)
   end
+
   private
 
-    def bid_params
-      params.permit(:proposed_price).merge(user_id: current_user.id)
-    end
+  def bid_params
+    params.permit(:proposed_price).merge(user_id: current_user.id)
+  end
 end

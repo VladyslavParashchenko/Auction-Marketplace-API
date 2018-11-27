@@ -6,7 +6,9 @@ RSpec.describe "Passwords", type: :request do
   let!(:user) { create(:client) }
 
   describe "POST create" do
-    subject { post "/auth/password", params: { email: user.email, redirect_url: "/" }, headers: user.create_new_auth_token }
+    subject do  post "/auth/password", params:  {email: user.email, redirect_url: "/"},
+                                       headers: user.create_new_auth_token
+    end
 
     it "should respond with success" do
       subject
@@ -22,8 +24,8 @@ RSpec.describe "Passwords", type: :request do
     end
     subject do
       get "/auth/password/edit", params: {
-          reset_password_token: @token,
-          redirect_url: "/"
+        reset_password_token: @token,
+        redirect_url:         "/"
       }, headers: @user.create_new_auth_token
     end
 
@@ -41,9 +43,9 @@ RSpec.describe "Passwords", type: :request do
   describe "PUT create" do
     subject do
       put "/auth/password", params: {
-          current_passord: "password",
-          password: "new_password",
-          password_confirmation: "new_password"
+        current_passord:       "password",
+        password:              "new_password",
+        password_confirmation: "new_password"
       }, headers: user.create_new_auth_token
     end
 

@@ -11,11 +11,11 @@ module Json_Helper
       sequence = Helpers::Sequence.new
       render json: item, sequence: sequence
     else
-      render json: { errors: item.errors }, status: 400
+      render json: {errors: item.errors}, status: 400
     end
   end
 
   def render_error(errors, status)
-    render json: { errors: errors }, status: status
+    render json: {errors: errors}, status: status
   end
 end

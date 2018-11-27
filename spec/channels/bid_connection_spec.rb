@@ -17,7 +17,8 @@ RSpec.describe "Action cable testing", type: :request do
       expect { subject }.to have_broadcasted_to("lot##{@lot.id}")
     end
     it "should broadcast a correct proposed_price a new bid" do
-      expect { subject }.to have_broadcasted_to("lot##{@lot.id}").with(a_hash_including(proposed_price: bid[:proposed_price].round(2).to_s))
+      expect { subject }.to have_broadcasted_to("lot##{@lot.id}")
+                                .with(a_hash_including(proposed_price: bid[:proposed_price].round(2).to_s))
     end
   end
 end

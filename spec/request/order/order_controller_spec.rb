@@ -38,7 +38,7 @@ RSpec.describe OrderController, type: :request do
         put "/lots/#{@lot.id}/order/#{@order.id}", params: order_status_attr, headers: @lot.user.create_new_auth_token
       end
       describe "try change status to sent" do
-        let(:order_status_attr) { { status: "sent" } }
+        let(:order_status_attr) { {status: "sent"} }
         it "should change status" do
           expect { subject }.to change { Order.find(@order.id).status }.from("pending").to("sent")
         end
@@ -46,10 +46,11 @@ RSpec.describe OrderController, type: :request do
     end
     context "current user is the random user" do
       subject do
-        put "/lots/#{@lot.id}/order/#{@order.id}", params: order_status_attr, headers: create(:client).create_new_auth_token
+        put "/lots/#{@lot.id}/order/#{@order.id}", params:  order_status_attr,
+                                                   headers: create(:client).create_new_auth_token
       end
       describe "try change status to sent" do
-        let(:order_status_attr) { { status: "sent" } }
+        let(:order_status_attr) { {status: "sent"} }
         include_examples "return permission error"
       end
     end
@@ -57,9 +58,10 @@ RSpec.describe OrderController, type: :request do
       describe "try change status to delivered" do
         before(:each) { @order.update_column(:status, :sent) }
         subject do
-          put "/lots/#{@lot.id}/order/#{@order.id}", params: order_status_attr, headers: @order.bid.user.create_new_auth_token
+          put "/lots/#{@lot.id}/order/#{@order.id}", params:  order_status_attr,
+                                                     headers: @order.bid.user.create_new_auth_token
         end
-        let(:order_status_attr) { { status: "delivered" } }
+        let(:order_status_attr) { {status: "delivered"} }
         it "should change status" do
           expect { subject }.to change { Order.find(@order.id).status }.from("sent").to("delivered")
         end
@@ -69,12 +71,12 @@ RSpec.describe OrderController, type: :request do
       describe "try change status to delivered" do
         before(:each) { @order.update_column(:status, :sent) }
         subject do
-          put "/lots/#{@lot.id}/order/#{@order.id}", params: order_status_attr, headers: @lot.user.create_new_auth_token
+          put "/lots/#{@lot.id}/order/#{@order.id}", params:  order_status_attr,
+                                                     headers: @lot.user.create_new_auth_token
         end
-        let(:order_status_attr) { { status: "delivered" } }
+        let(:order_status_attr) { {status: "delivered"} }
         include_examples "return permission error"
       end
     end
-
   end
 end
