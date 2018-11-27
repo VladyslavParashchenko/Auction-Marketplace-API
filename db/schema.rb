@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_529_180_345) do
+ActiveRecord::Schema.define(version: 2018_06_27_140342) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +20,7 @@ ActiveRecord::Schema.define(version: 20_180_529_180_345) do
     t.bigint "lot_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "proposed_price", precision: 8, scale: 2
     t.index ["lot_id"], name: "index_bids_on_lot_id"
     t.index ["user_id"], name: "index_bids_on_user_id"
   end
@@ -29,6 +29,17 @@ ActiveRecord::Schema.define(version: 20_180_529_180_345) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "title"
+    t.string "image"
+    t.text "description"
+    t.integer "status", default: 0
+    t.decimal "current_price", precision: 8, scale: 2
+    t.decimal "estimated_price", precision: 8, scale: 2
+    t.datetime "lot_start_time"
+    t.datetime "lot_end_time"
+    t.string "start_jid"
+    t.string "end_jid"
+    t.integer "winner_bid"
     t.index ["user_id"], name: "index_lots_on_user_id"
   end
 
@@ -36,6 +47,10 @@ ActiveRecord::Schema.define(version: 20_180_529_180_345) do
     t.bigint "bid_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "arrival_location"
+    t.integer "arrival_type"
+    t.integer "status", default: 0
+    t.string "delivery_company"
     t.index ["bid_id"], name: "index_orders_on_bid_id"
   end
 
@@ -48,10 +63,32 @@ ActiveRecord::Schema.define(version: 20_180_529_180_345) do
     t.string "first_name"
     t.string "last_name"
     t.datetime "birthday"
+    t.string "provider", default: "email", null: false
+    t.string "uid", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.boolean "allow_password_change", default: false
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.json "tokens"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
   add_foreign_key "bids", "lots"
   add_foreign_key "bids", "users"
+  add_foreign_key "lots", "bids", column: "winner_bid"
   add_foreign_key "lots", "users"
   add_foreign_key "orders", "bids"
 end

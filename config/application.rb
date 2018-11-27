@@ -18,7 +18,7 @@ require "action_cable/engine"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-
+Dotenv::Railtie.load
 module AuctionMarketplace
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -31,7 +31,9 @@ module AuctionMarketplace
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
-    # Skip views, helpers and assets when generating a new resource.
+    # Skip views, helpers and assets when generating a new lots.
     config.api_only = true
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.active_job.queue_adapter = :sidekiq
   end
 end

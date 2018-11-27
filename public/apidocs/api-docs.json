@@ -1,0 +1,36 @@
+{
+  "apiVersion": "1.0",
+  "swaggerVersion": "1.2",
+  "basePath": "",
+  "apis": [
+    {
+      "path": "/apidocs/users/sessions.{format}",
+      "description": "User session management"
+    },
+    {
+      "path": "/apidocs/users/passwords.{format}",
+      "description": "User password management"
+    },
+    {
+      "path": "/apidocs/users/registrations.{format}",
+      "description": "User registration"
+    },
+    {
+      "path": "/apidocs/lots.{format}",
+      "description": "Lot management"
+    },
+    {
+      "path": "/apidocs/bids.{format}",
+      "description": "Bid management"
+    },
+    {
+      "path": "/apidocs/order.{format}",
+      "description": "Order management"
+    }
+  ],
+  "authorizations": null,
+  "info": {
+    "title": "Auction MarketPlace API",
+    "description": "API for auction"
+  }
+}

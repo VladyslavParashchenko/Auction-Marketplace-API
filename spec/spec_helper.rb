@@ -13,8 +13,11 @@
 # a separate helper file that requires the additional dependencies and performs
 # the additional setup, and require it from the spec files that actually need
 # it.
-#
+# require "simplecov"
+# SimpleCov.start
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
@@ -45,7 +48,7 @@ RSpec.configure do |config|
   # inherited by the metadata hash of host groups and examples, rather than
   # triggering implicit auto-inclusion in groups with matching metadata.
   config.shared_context_metadata_behavior = :apply_to_host_groups
-
+  Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
   # The settings below are suggested to provide a good initial experience
   # with RSpec, but feel free to customize to your heart's content.
   #   # This allows you to limit a spec run to individual examples or groups
@@ -93,9 +96,10 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
-  if ENV["RAILS_ENV"] == "test"
-    require "simplecov"
-    SimpleCov.start "rails"
-    puts "required simplecov"
-  end
+  # if ENV["RAILS_ENV"] == "test"
+  #   require "simplecov"
+  #   SimpleCov.start "rails"
+  #   puts "required simplecov"
+  # end
+
 end
